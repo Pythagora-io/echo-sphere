@@ -8,55 +8,84 @@
     <h2 class="text-2xl font-bold mb-6"><%= subSphere.name %> Posts</h2>
     <% if(posts.length > 0) { %>
       <% posts.forEach(function(post) { %>
-        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 cursor-pointer" onclick="location.href='/posts/<%= post._id %>'">
           <% if (post.type === 'image') { %>
-            <a href="/posts/<%= post._id %>"><img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto"></a>
+            <img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto">
           <% } else if (post.type === 'video') { %>
-            <a href="/posts/<%= post._id %>"><video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video></a>
+            <video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video>
           <% } else if (post.type === 'link') { %>
             <a href="<%= post.content %>" target="_blank" rel="noopener noreferrer" class="text-xl font-bold mb-2"><%= post.content %></a>
           <% } else { %>
-            <a href="/posts/<%= post._id %>" class="text-xl font-bold mb-2"><%= post.content %></a>
+            <p class="text-xl font-bold mb-2"><%= post.content %></p>
           <% } %>
-          <!-- Additional post details like author and timestamps can be added here -->
+          <div class="mt-4 text-sm text-gray-600 italic">Posted by <%= post.author.username %> on <%= post.createdAt.toDateString() %></div>
+          <div class="flex space-x-4 mt-4">
+            <button onclick="upvotePost('<%= post._id %>', event)" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
+            <button onclick="downvotePost('<%= post._id %>', event)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
+            <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span> votes
+          </div>
+          <div class="mt-4">
+            <% if (post.flares) { %>
+              <% post.flares.forEach(function(flare) { %>
+                <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-2"><%= flare %></span>
+              <% }); %>
+            <% } %>
+          </div>
         </div>
       <% }); %>
     <% } else { %>
       <p>No posts found in this SubSphere.</p>
     <% } %>
-    <div class="mt-4">
-      <% if(isSubscribed) { %>
-        <button onclick="subscribeToggle('<%= subSphere._id %>', false)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Unsubscribe</button>
-      <% } else { %>
-        <button onclick="subscribeToggle('<%= subSphere._id %>', true)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Subscribe</button>
-      <% } %>
-    </div>
   </div>
 </main>
 <%- include('partials/_footer.ejs') %>
 <script src="/js/main.js"></script>
 <script>
-  function subscribeToggle(subSphereId, subscribe) {
-    fetch(subscribe ? '/subscribeToSubSphere' : '/unsubscribeFromSubSphere', {
+  function upvotePost(postId, event) {
+    event.stopPropagation();
+    fetch(`/votePost/${postId}/upvote`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ subSphereId: subSphereId }),
+      body: JSON.stringify({}),
     })
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        console.log(subscribe ? 'Subscribed successfully' : 'Unsubscribed successfully');
-        window.location.reload();
+        document.getElementById(`post-${postId}-votes`).innerText = data.newVoteCount;
+        console.log('Upvote successful for post');
       } else {
-        console.error('Subscription toggle failed:', data.message);
+        console.error('Error upvoting post:', data.message);
       }
     })
     .catch(error => {
-      console.error('Error toggling subscription:', error);
-      console.error(error.stack);
-      alert('Failed to toggle subscription.');
+      console.error('Error upvoting post:', error);
+      console.error('Error details:', error.message);
+    });
+  }
+
+  function downvotePost(postId, event) {
+    event.stopPropagation();
+    fetch(`/votePost/${postId}/downvote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById(`post-${postId}-votes`).innerText = data.newVoteCount;
+        console.log('Downvote successful for post');
+      } else {
+        console.error('Error downvoting post:', data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error downvoting post:', error);
+      console.error('Error details:', error.message);
     });
   }
 </script>

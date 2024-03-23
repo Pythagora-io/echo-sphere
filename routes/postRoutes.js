@@ -104,4 +104,19 @@ router.get('/posts/:postId', isAuthenticated, async (req, res) => {
   }
 });
 
+// GET route for viewing posts within a SubSphere
+router.get('/subSphere/:subSphereId/posts', isAuthenticated, async (req, res) => {
+  try {
+    const subSphereId = req.params.subSphereId;
+    const posts = await Post.find({ subSphere: subSphereId }).populate('author');
+    const subSphere = await SubSphere.findById(subSphereId);
+    const isSubscribed = subSphere.subscribers.includes(req.session.userId);
+    res.render('subSpherePosts', { posts, subSphere, isSubscribed });
+  } catch (error) {
+    console.error('Error fetching posts for SubSphere:', error);
+    console.error(error.stack);
+    res.status(500).send('Failed to fetch posts for SubSphere');
+  }
+});
+
 module.exports = router;
