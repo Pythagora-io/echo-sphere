@@ -3,7 +3,14 @@ const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
-  password: { type: String, required: true }
+  email: { type: String, unique: true, required: true, match: [/.+\@.+\..+/, 'Please fill a valid email address'] },
+  password: { type: String, required: true },
+  avatar: String,
+  bio: String,
+  settings: {
+    darkMode: { type: Boolean, default: false },
+    notifications: { type: Boolean, default: true },
+  }
 });
 
 userSchema.pre('save', function(next) {
@@ -12,6 +19,7 @@ userSchema.pre('save', function(next) {
   bcrypt.hash(user.password, 10, (err, hash) => {
     if (err) {
       console.error('Error hashing password:', err);
+      console.error(err.stack);
       return next(err);
     }
     user.password = hash;

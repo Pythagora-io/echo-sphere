@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/_head.ejs') %>
+  <body>
+<%- include('partials/_header.ejs') %>
+    <main role="main">
+      <div class="container mt-5">
+        <h2>Your Profile</h2>
+        <% if (success) { %>
+          <div class="alert alert-success" role="alert">
+            Profile updated successfully!
+          </div>
+        <% } %>
+        <form action="/profile" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="avatar" class="form-label">Avatar</label>
+            <% if (user.avatar) { %>
+              <img src="<%= user.avatar %>" alt="Your Avatar" style="width: 150px; height: 150px; object-fit: cover;">
+            <% } %>
+            <input type="file" name="avatar" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="bio" class="form-label">Bio</label>
+            <textarea name="bio" placeholder="Tell us about yourself" required class="form-control"><%= user.bio %></textarea>
+          </div>
+          <!-- Add more fields for settings as needed -->
+          <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </body>
+<%- include('partials/_footer.ejs') %>
+</html>

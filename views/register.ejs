@@ -6,12 +6,19 @@
     <main role="main">
       <div class="container mt-5">
         <h2>Register</h2>
-        <form action="/auth/register" method="POST">
+        <form action="/auth/register" method="POST" enctype="multipart/form-data">
           <div class="mb-3">
             <input type="text" name="username" placeholder="Username" required class="form-control">
           </div>
           <div class="mb-3">
+            <input type="email" name="email" placeholder="Email" required class="form-control">
+          </div>
+          <div class="mb-3">
             <input type="password" name="password" placeholder="Password" required class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="avatar" class="form-label">Avatar (Optional)</label>
+            <input type="file" name="avatar" class="form-control" accept="image/jpeg, image/png">
           </div>
           <div class="mb-3">
             <button type="submit" class="btn btn-primary mr-2">Register</button>
