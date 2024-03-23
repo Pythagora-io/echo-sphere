@@ -7,11 +7,18 @@ const postSchema = new mongoose.Schema({
   upvotes: { type: Number, default: 0 },
   downvotes: { type: Number, default: 0 },
   flairs: [{ type: String }],
-  subSphere: { type: mongoose.Schema.Types.ObjectId, ref: 'SubSphere', required: true }
+  subSphere: { type: mongoose.Schema.Types.ObjectId, ref: 'SubSphere', required: true },
+  votes: [{
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    type: { type: String, enum: ['upvote', 'downvote'], required: true }
+  }]
 }, { timestamps: true });
 
 postSchema.pre('save', function(next) {
   console.log(`Saving post of type: ${this.type} by author ID: ${this.author}`);
+  // Recalculate upvotes and downvotes based on votes array
+  this.upvotes = this.votes.filter(vote => vote.type === 'upvote').length;
+  this.downvotes = this.votes.filter(vote => vote.type === 'downvote').length;
   next();
 });
 

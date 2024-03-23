@@ -24,20 +24,32 @@ async function handleVote(voteType, documentId, userId, documentType) {
       throw new Error('Document not found');
     }
 
-    if (voteType === 'upvote') {
-      document.upvotes += 1;
-      user.karma += 1; // Increment user's karma for upvote
-    } else if (voteType === 'downvote') {
-      document.downvotes += 1;
-      user.karma -= 1; // Decrement user's karma for downvote, if needed
+    // Check if the user has already voted
+    const existingVoteIndex = document.votes.findIndex(vote => vote.user.toString() === userId);
+    if (existingVoteIndex !== -1) {
+      if (document.votes[existingVoteIndex].type === voteType) {
+        // Undo the vote
+        document.votes.splice(existingVoteIndex, 1);
+      } else {
+        // Change the vote
+        document.votes[existingVoteIndex].type = voteType;
+      }
     } else {
-      throw new Error('Invalid vote type');
+      // Add new vote
+      document.votes.push({ user: userId, type: voteType });
     }
 
+    // Recalculate upvotes and downvotes
+    document.upvotes = document.votes.filter(vote => vote.type === 'upvote').length;
+    document.downvotes = document.votes.filter(vote => vote.type === 'downvote').length;
+
     await document.save();
-    await user.save();
+
+    // Determine the user's current vote status for response
+    const userVoteStatus = document.votes.find(vote => vote.user.toString() === userId)?.type || 'none';
 
     console.log(`Vote processed: ${voteType} on ${documentType} by user ${userId}`);
+    return { success: true, newVoteCount: document.upvotes - document.downvotes, userVoteStatus };
   } catch (error) {
     console.error('Error processing vote:', error.message, error.stack);
     throw error; // Rethrow the error after logging

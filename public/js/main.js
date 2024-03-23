@@ -1,113 +1,119 @@
 function upvotePost(postId) {
-  fetch(`/votePost/${postId}/upvote`, {
+  fetch(`/post/${postId}/upvote`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ direction: 'up' }),
+    body: JSON.stringify({}),
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
+  .then(response => response.json())
   .then(data => {
     if (data.success) {
-      document.getElementById(`post-${postId}-votes`).innerText = data.newVoteCount;
-      console.log('Upvote successful');
+      const voteElement = document.getElementById(`post-${postId}-votes`);
+      voteElement.innerText = data.newVoteCount;
+      console.log('Vote updated for post', postId);
+      // Update button styles based on vote status
+      updateVoteButtonStyles(postId, data.userVoteStatus, 'post');
     } else {
-      console.error('Error upvoting:', data.message);
+      console.error('Error updating vote for post:', postId, data.message);
     }
   })
   .catch(error => {
-    console.error('Error upvoting post:', error);
-    console.error(error.stack);
+    console.error('Error updating vote for post:', postId, error);
+    console.error('Error details:', error.message);
   });
 }
 
 function downvotePost(postId) {
-  fetch(`/votePost/${postId}/downvote`, {
+  fetch(`/post/${postId}/downvote`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ direction: 'down' }),
+    body: JSON.stringify({}),
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
+  .then(response => response.json())
   .then(data => {
     if (data.success) {
-      document.getElementById(`post-${postId}-votes`).innerText = data.newVoteCount;
-      console.log('Downvote successful');
+      const voteElement = document.getElementById(`post-${postId}-votes`);
+      voteElement.innerText = data.newVoteCount;
+      console.log('Vote updated for post', postId);
+      // Update button styles based on vote status
+      updateVoteButtonStyles(postId, data.userVoteStatus, 'post');
     } else {
-      console.error('Error downvoting:', data.message);
+      console.error('Error updating vote for post:', postId, data.message);
     }
   })
   .catch(error => {
-    console.error('Error downvoting post:', error);
-    console.error(error.stack);
+    console.error('Error updating vote for post:', postId, error);
+    console.error('Error details:', error.message);
   });
 }
 
 function upvoteComment(commentId) {
-  fetch(`/voteComment/${commentId}/upvote`, {
+  fetch(`/comment/${commentId}/upvote`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ direction: 'up' }),
+    body: JSON.stringify({}),
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
+  .then(response => response.json())
   .then(data => {
     if (data.success) {
-      document.getElementById(`comment-${commentId}-votes`).innerText = data.newVoteCount;
-      console.log('Upvote successful');
+      const voteElement = document.getElementById(`comment-${commentId}-votes`);
+      voteElement.innerText = data.newVoteCount;
+      console.log('Vote updated for comment', commentId);
+      // Update button styles based on vote status
+      updateVoteButtonStyles(commentId, data.userVoteStatus, 'comment');
     } else {
-      console.error('Error upvoting:', data.message);
+      console.error('Error updating vote for comment:', commentId, data.message);
     }
   })
   .catch(error => {
-    console.error('Error upvoting comment:', error);
-    console.error(error.stack);
+    console.error('Error updating vote for comment:', commentId, error);
+    console.error('Error details:', error.message);
   });
 }
 
 function downvoteComment(commentId) {
-  fetch(`/voteComment/${commentId}/downvote`, {
+  fetch(`/comment/${commentId}/downvote`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ direction: 'down' }),
+    body: JSON.stringify({}),
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
+  .then(response => response.json())
   .then(data => {
     if (data.success) {
-      document.getElementById(`comment-${commentId}-votes`).innerText = data.newVoteCount;
-      console.log('Downvote successful');
+      const voteElement = document.getElementById(`comment-${commentId}-votes`);
+      voteElement.innerText = data.newVoteCount;
+      console.log('Vote updated for comment', commentId);
+      // Update button styles based on vote status
+      updateVoteButtonStyles(commentId, data.userVoteStatus, 'comment');
     } else {
-      console.error('Error downvoting:', data.message);
+      console.error('Error updating vote for comment:', commentId, data.message);
     }
   })
   .catch(error => {
-    console.error('Error downvoting comment:', error);
-    console.error(error.stack);
+    console.error('Error updating vote for comment:', commentId, error);
+    console.error('Error details:', error.message);
   });
+}
+
+function updateVoteButtonStyles(id, status, type) {
+  const upvoteButton = document.getElementById(`${type}-upvote-${id}`);
+  const downvoteButton = document.getElementById(`${type}-downvote-${id}`);
+  // Reset styles
+  upvoteButton.classList.remove('voted');
+  downvoteButton.classList.remove('voted');
+  // Apply styles based on status
+  if (status === 'upvoted') {
+    upvoteButton.classList.add('voted');
+  } else if (status === 'downvoted') {
+    downvoteButton.classList.add('voted');
+  }
 }
 
 function subscribeToSubSphere(subSphereId) {
@@ -121,15 +127,15 @@ function subscribeToSubSphere(subSphereId) {
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      console.log(data.message);
+      console.log('Subscription successful to SubSphere', subSphereId);
       location.reload(); // Reload the page to update the subscription status
     } else {
-      console.error('Error subscribing to SubSphere:', data.message);
+      console.error('Error subscribing to SubSphere:', subSphereId, data.message);
     }
   })
   .catch(error => {
-    console.error('Error subscribing to SubSphere:', error);
-    console.error(error.stack);
+    console.error('Error subscribing to SubSphere:', subSphereId, error);
+    console.error('Error details:', error.message);
   });
 }
 
@@ -144,15 +150,15 @@ function unsubscribeFromSubSphere(subSphereId) {
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      console.log(data.message);
+      console.log('Unsubscription successful from SubSphere', subSphereId);
       location.reload(); // Reload the page to update the subscription status
     } else {
-      console.error('Error unsubscribing from SubSphere:', data.message);
+      console.error('Error unsubscribing from SubSphere:', subSphereId, data.message);
     }
   })
   .catch(error => {
-    console.error('Error unsubscribing from SubSphere:', error);
-    console.error(error.stack);
+    console.error('Error unsubscribing from SubSphere:', subSphereId, error);
+    console.error('Error details:', error.message);
   });
 }
 
