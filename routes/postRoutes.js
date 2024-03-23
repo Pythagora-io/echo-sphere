@@ -3,7 +3,8 @@ const multer = require('multer');
 const { isAuthenticated } = require('./middleware/authMiddleware');
 const Post = require('../models/Post');
 const SubSphere = require('../models/SubSphere'); // Import SubSphere model to query available SubSpheres
-const User = require('../models/User'); // Import User model to query subscribed SubSpheres
+const User = require('../models/User'); // Import User model for user-specific queries
+const mongoose = require('mongoose'); // Import mongoose to use ObjectId for comparison
 const router = express.Router();
 const path = require('path');
 const fs = require('fs');
@@ -36,13 +37,14 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 // GET route for the create post page
 router.get('/createPost', isAuthenticated, async (req, res) => {
   try {
-    // Fetch SubSpheres where the user is a moderator or subscribed to
-    const user = await User.findById(req.session.userId).populate('subscribedSubSpheres').exec();
-    const moderatorSubSpheres = await SubSphere.find({ moderators: req.session.userId }).exec();
-    const subscribedSubSpheres = user.subscribedSubSpheres;
-    const subSpheres = [...moderatorSubSpheres, ...subscribedSubSpheres.filter(subSphere => !moderatorSubSpheres.includes(subSphere))];
-    if (subSpheres.length > 0) {
-      res.render('posts/createPost', { subSpheres });
+    // Fetch all SubSpheres and filter those where the user is a subscriber
+    const allSubSpheres = await SubSphere.find();
+    const userSubscribedSubSpheres = allSubSpheres.filter(subSphere => subSphere.subscribers.map(subscriber => subscriber.toString()).includes(req.session.userId.toString()));
+    const moderatorSubSpheres = await SubSphere.find({ moderators: req.session.userId });
+    const subSphereIds = [...new Set([...moderatorSubSpheres.map(sphere => sphere._id.toString()), ...userSubscribedSubSpheres.map(sphere => sphere._id.toString())])]; // Combine and remove duplicates
+    const uniqueSubSpheres = await SubSphere.find({ '_id': { $in: subSphereIds } });
+    if (uniqueSubSpheres.length > 0) {
+      res.render('posts/createPost', { subSpheres: uniqueSubSpheres });
     } else {
       res.render('posts/createPost', { message: 'Please explore and join a SubSphere before creating a post.' });
     }
