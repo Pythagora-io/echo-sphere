@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/_head.ejs') %>
-  <body>
+  <body class="bg-gray-100">
 <%- include('partials/_header.ejs') %>
-    <main role="main">
-      <div class="container mt-5">
-        <h2>Register</h2>
-        <form action="/auth/register" method="POST" enctype="multipart/form-data">
-          <div class="mb-3">
-            <input type="text" name="username" placeholder="Username" required class="form-control">
+    <main role="main" class="mt-5">
+      <div class="max-w-lg mx-auto px-4">
+        <h2 class="text-2xl font-bold mb-6">Register</h2>
+        <form action="/auth/register" method="POST" enctype="multipart/form-data" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <div class="mb-4">
+            <input type="text" name="username" placeholder="Username" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
           </div>
-          <div class="mb-3">
-            <input type="email" name="email" placeholder="Email" required class="form-control">
+          <div class="mb-4">
+            <input type="email" name="email" placeholder="Email" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
           </div>
-          <div class="mb-3">
-            <input type="password" name="password" placeholder="Password" required class="form-control">
+          <div class="mb-4">
+            <input type="password" name="password" placeholder="Password" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline">
           </div>
-          <div class="mb-3">
-            <label for="avatar" class="form-label">Avatar (Optional)</label>
-            <input type="file" name="avatar" class="form-control" accept="image/jpeg, image/png">
+          <div class="mb-4">
+            <label for="avatar" class="block text-gray-700 text-sm font-bold mb-2">Avatar (Optional)</label>
+            <input type="file" name="avatar" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" accept="image/jpeg, image/png">
           </div>
-          <div class="mb-3">
-            <button type="submit" class="btn btn-primary mr-2">Register</button>
-            Already have an account? <a href="/auth/login">Login</a>
+          <div class="flex items-center justify-between">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Register</button>
+            <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="/auth/login">
+              Don't have an account? Login
+            </a>
           </div>
         </form>
       </div>

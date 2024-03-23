@@ -1,1 +1,18 @@
-/* Placeholder for custom styles */
+/* Tailwind CSS Custom Styles */
+
+/* You might want to add custom styles here that are specific to your application's design requirements. 
+   This could include styles for custom components that aren't directly covered by Tailwind's utility classes. 
+   Remember, Tailwind encourages a utility-first approach, so try to use its utility classes wherever possible 
+   before adding custom styles here. */
+
+/* Example custom button style (replace or remove as needed) */
+.btn-custom {
+  @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
+}
+
+/* Example custom form input style (replace or remove as needed) */
+.input-custom {
+  @apply border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md shadow-sm;
+}
+
+/* Add more custom styles as needed */

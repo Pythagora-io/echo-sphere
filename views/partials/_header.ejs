@@ -1,20 +1,19 @@
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">New_EchoSphere</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="/">Home</a>
+<nav class="bg-gray-800 p-4">
+  <div class="container mx-auto flex justify-between items-center">
+    <a class="text-white text-lg font-bold" href="/">New_EchoSphere</a>
+    <div>
+      <ul class="flex space-x-4">
+        <li>
+          <a class="text-gray-300 hover:text-white" href="/">Home</a>
         </li>
-        <li class="nav-item">
+        <li>
           <% if (session && session.userId) { %>
-          <a class="nav-link" href="/auth/logout">Logout</a>
+          <a class="text-gray-300 hover:text-white" href="/auth/logout">Logout</a>
           <% } else { %>
-          <a class="nav-link" href="/auth/login">Login</a>
+          <a class="text-gray-300 hover:text-white" href="/auth/login">Login</a>
           <% } %>
         </li>
       </ul>
     </div>
-  </nav>
+  </div>
+</nav>
