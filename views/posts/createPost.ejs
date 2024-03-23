@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/_head.ejs') %>
+<body class="bg-gray-100">
+<%- include('../partials/_header.ejs') %>
+<main role="main" class="mt-10">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 class="text-2xl font-bold mb-6">Create Post</h2>
+    <% if (subSpheres && subSpheres.length > 0) { %>
+    <form action="/createPost" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" enctype="multipart/form-data">
+      <div class="mb-4">
+        <label for="type" class="block text-gray-700 text-sm font-bold mb-2">Post Type</label>
+        <select name="type" id="postType" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <option value="text">Text</option>
+          <option value="link">Link</option>
+          <option value="image">Image</option>
+          <option value="video">Video</option>
+        </select>
+      </div>
+      <div class="mb-4" id="contentField">
+        <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
+        <textarea name="content" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+      </div>
+      <div class="mb-4">
+        <label for="flairs" class="block text-gray-700 text-sm font-bold mb-2">Flairs (comma-separated)</label>
+        <input type="text" name="flairs" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      </div>
+      <div class="mb-4">
+        <label for="subSphere" class="block text-gray-700 text-sm font-bold mb-2">SubSphere</label>
+        <select name="subSphere" class="subSphere-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+          <% subSpheres.forEach(function(subSphere) { %>
+            <option value="<%= subSphere._id %>"><%= subSphere.name %></option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="flex items-center justify-between">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Post</button>
+      </div>
+    </form>
+    <% } else { %>
+      <p>Please explore and join a SubSphere before creating a post.</p>
+    <% } %>
+  </div>
+</main>
+<%- include('../partials/_footer.ejs') %>
+<script src="/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+  document.getElementById('postType').addEventListener('change', function() {
+    const selectedType = this.value;
+    const contentField = document.getElementById('contentField');
+    contentField.innerHTML = '';
+    if (selectedType === 'text') {
+      contentField.innerHTML = '<label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content</label><textarea name="content" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>';
+    } else if (selectedType === 'link') {
+      contentField.innerHTML = '<label for="content" class="block text-gray-700 text-sm font-bold mb-2">Link</label><input type="url" name="content" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">';
+    } else if (selectedType === 'image' || selectedType === 'video') {
+      contentField.innerHTML = '<label for="content" class="block text-gray-700 text-sm font-bold mb-2">' + (selectedType === 'image' ? 'Image' : 'Video') + '</label><input type="file" name="content" accept="' + (selectedType === 'image' ? 'image/*' : 'video/*') + '" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">';
+    }
+  });
+  $(document).ready(function() {
+    $('.subSphere-select').select2({
+      placeholder: "Select a SubSphere",
+      allowClear: true
+    });
+  });
+</script>
+</body>
+</html>

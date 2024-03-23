@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/_head.ejs') %>
+<body class="bg-gray-100">
+<%- include('partials/_header.ejs') %>
+<main role="main" class="mt-10">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 class="text-2xl font-bold mb-6"><%= subSphere.name %> Posts</h2>
+    <% if(posts.length > 0) { %>
+      <% posts.forEach(function(post) { %>
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <h3 class="text-xl font-bold mb-2"><%= post.type.toUpperCase() %></h3>
+          <p><%= post.content %></p>
+          <!-- Additional post details like author and timestamps can be added here -->
+        </div>
+      <% }); %>
+    <% } else { %>
+      <p>No posts found in this SubSphere.</p>
+    <% } %>
+    <div class="mt-4">
+      <% if(isSubscribed) { %>
+        <button onclick="subscribeToggle('<%= subSphere._id %>', false)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Unsubscribe</button>
+      <% } else { %>
+        <button onclick="subscribeToggle('<%= subSphere._id %>', true)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Subscribe</button>
+      <% } %>
+    </div>
+  </div>
+</main>
+<%- include('partials/_footer.ejs') %>
+<script src="/js/main.js"></script>
+<script>
+  function subscribeToggle(subSphereId, subscribe) {
+    fetch(subscribe ? '/subscribeToSubSphere' : '/unsubscribeFromSubSphere', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ subSphereId: subSphereId }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log(subscribe ? 'Subscribed successfully' : 'Unsubscribed successfully');
+        window.location.reload();
+      } else {
+        console.error('Subscription toggle failed:', data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error toggling subscription:', error);
+      console.error(error.stack);
+      alert('Failed to toggle subscription.');
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/_head.ejs') %>
+<body class="bg-gray-100">
+<%- include('../partials/_header.ejs') %>
+<main role="main" class="mt-10">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 class="text-2xl font-bold mb-6">Posts</h2>
+    <% posts.forEach(function(post) { %>
+      <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h3 class="text-xl font-bold mb-2"><%= post.title %></h3>
+        <p><%= post.content %></p>
+        <div class="mt-4">
+          <button onclick="vote('up', '<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
+          <button onclick="vote('down', '<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
+          <span id="vote-count-<%= post._id %>"><%= post.upvotes - post.downvotes %></span> votes
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</main>
+<%- include('../partials/_footer.ejs') %>
+<script src="/js/main.js"></script>
+<script>
+  function vote(direction, postId) {
+    fetch(`/posts/${postId}/vote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ direction }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById(`vote-count-${postId}`).innerText = data.newVoteCount;
+        console.log(`Vote updated successfully for post ${postId}`);
+      } else {
+        console.error('Error voting:', data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error voting:', error);
+      console.error('Error details:', error.message);
+    });
+  }
+</script>
+</body>
+</html>

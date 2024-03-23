@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/_head.ejs') %>
+<body class="bg-gray-100">
+<%- include('../partials/_header.ejs') %>
+<main role="main" class="mt-10">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 class="text-2xl font-bold mb-6">Comments</h2>
+    <% comments.forEach(function(comment) { %>
+      <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <p class="text-gray-700 text-base mb-4"><%= comment.content %></p>
+        <div class="flex items-center justify-between">
+          <button onclick="voteComment('<%= comment._id %>', 'upvote')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Upvote</button>
+          <button onclick="voteComment('<%= comment._id %>', 'downvote')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Downvote</button>
+          <span>Votes: <span id="comment-<%= comment._id %>-votes"><%= comment.upvotes - comment.downvotes %></span></span>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</main>
+<%- include('../partials/_footer.ejs') %>
+<script src="/js/main.js"></script>
+<script>
+  function voteComment(commentId, action) {
+    fetch(`/comments/${commentId}/vote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action: action }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById(`comment-${commentId}-votes`).innerText = data.newVoteCount;
+      }
+    })
+    .catch(error => {
+      console.error('Error voting on comment:', error);
+      alert('Failed to vote on comment.');
+    });
+  }
+</script>
+</body>
+</html>

@@ -7,6 +7,11 @@ const MongoStore = require('connect-mongo');
 const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require('./routes/profileRoutes'); // Added profile routes
 const subSphereRoutes = require('./routes/subSphereRoutes'); // Added SubSphere routes
+const postRoutes = require('./routes/postRoutes'); // Added post routes
+const commentRoutes = require('./routes/commentRoutes'); // Added comment routes
+const multer = require('multer'); // For handling multipart/form-data
+const path = require('path');
+const fs = require('fs');
 
 if (!process.env.DATABASE_URL || !process.env.SESSION_SECRET) {
   console.error("Error: config environment variables not set. Please create/edit .env configuration file.");
@@ -25,6 +30,9 @@ app.set("view engine", "ejs");
 
 // Serve static files
 app.use(express.static("public"));
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Database connection
 mongoose
@@ -78,6 +86,12 @@ app.use(profileRoutes); // Use the profile routes
 
 // SubSphere Routes
 app.use(subSphereRoutes); // Use the SubSphere routes
+
+// Post Routes
+app.use(postRoutes); // Use the post routes
+
+// Comment Routes
+app.use(commentRoutes); // Use the comment routes
 
 // Root path response
 app.get("/", (req, res) => {
