@@ -163,13 +163,17 @@ $(document).ready(function() {
   });
 
   // Event listeners for subscribe and unsubscribe buttons
-  $('.subscribe-btn').on('click', function() {
-    const subSphereId = $(this).data('subsphere-id');
-    subscribeToSubSphere(subSphereId);
+  document.querySelectorAll('.subscribe-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const subSphereId = this.getAttribute('data-subsphere-id');
+      subscribeToSubSphere(subSphereId);
+    });
   });
 
-  $('.unsubscribe-btn').on('click', function() {
-    const subSphereId = $(this).data('subsphere-id');
-    unsubscribeFromSubSphere(subSphereId);
+  document.querySelectorAll('.unsubscribe-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const subSphereId = this.getAttribute('data-subsphere-id');
+      unsubscribeFromSubSphere(subSphereId);
+    });
   });
 });

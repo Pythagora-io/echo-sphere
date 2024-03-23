@@ -86,7 +86,7 @@ router.get('/subSphere/:subSphereId/posts', isAuthenticated, async (req, res) =>
     const subSphereId = req.params.subSphereId;
     const posts = await Post.find({ subSphere: subSphereId }).populate('author');
     const subSphere = await SubSphere.findById(subSphereId);
-    const isSubscribed = subSphere.subscribers.includes(req.session.userId);
+    const isSubscribed = subSphere.subscribers.some(subscriber => subscriber.equals(req.session.userId));
     res.render('subSpherePosts', { posts, subSphere, isSubscribed });
   } catch (error) {
     console.error('Error fetching posts for SubSphere:', error);

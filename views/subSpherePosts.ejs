@@ -6,6 +6,11 @@
 <main role="main" class="mt-10">
   <div class="max-w-4xl mx-auto px-4">
     <h2 class="text-2xl font-bold mb-6"><%= subSphere.name %> Posts</h2>
+    <% if(isSubscribed) { %>
+      <button onclick="unsubscribeFromSubSphere('<%= subSphere._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-4">Unsubscribe</button>
+    <% } else { %>
+      <button onclick="subscribeToSubSphere('<%= subSphere._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4">Subscribe</button>
+    <% } %>
     <% if(posts.length > 0) { %>
       <% posts.forEach(function(post) { %>
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 cursor-pointer" onclick="location.href='/posts/<%= post._id %>'">
@@ -54,13 +59,13 @@
     .then(data => {
       if (data.success) {
         document.getElementById(`post-${postId}-votes`).innerText = data.newVoteCount;
-        console.log('Upvote successful for post');
+        console.log('Upvote successful for post', postId);
       } else {
-        console.error('Error upvoting post:', data.message);
+        console.error('Error upvoting post:', postId, data.message);
       }
     })
     .catch(error => {
-      console.error('Error upvoting post:', error);
+      console.error('Error upvoting post:', postId, error);
       console.error('Error details:', error.message);
     });
   }
@@ -78,13 +83,59 @@
     .then(data => {
       if (data.success) {
         document.getElementById(`post-${postId}-votes`).innerText = data.newVoteCount;
-        console.log('Downvote successful for post');
+        console.log('Downvote successful for post', postId);
       } else {
-        console.error('Error downvoting post:', data.message);
+        console.error('Error downvoting post:', postId, data.message);
       }
     })
     .catch(error => {
-      console.error('Error downvoting post:', error);
+      console.error('Error downvoting post:', postId, error);
+      console.error('Error details:', error.message);
+    });
+  }
+
+  function subscribeToSubSphere(subSphereId) {
+    fetch(`/subscribeToSubSphere`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ subSphereId }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log('Subscription successful to SubSphere', subSphereId);
+        location.reload(); // Reload the page to update the subscription status
+      } else {
+        console.error('Error subscribing to SubSphere:', subSphereId, data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error subscribing to SubSphere:', subSphereId, error);
+      console.error('Error details:', error.message);
+    });
+  }
+
+  function unsubscribeFromSubSphere(subSphereId) {
+    fetch(`/unsubscribeFromSubSphere`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ subSphereId }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log('Unsubscription successful from SubSphere', subSphereId);
+        location.reload(); // Reload the page to update the subscription status
+      } else {
+        console.error('Error unsubscribing from SubSphere:', subSphereId, data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error unsubscribing from SubSphere:', subSphereId, error);
       console.error('Error details:', error.message);
     });
   }
