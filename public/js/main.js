@@ -105,6 +105,10 @@ function downvoteComment(commentId) {
 function updateVoteButtonStyles(id, status, type) {
   const upvoteButton = document.getElementById(`${type}-upvote-${id}`);
   const downvoteButton = document.getElementById(`${type}-downvote-${id}`);
+  if (!upvoteButton || !downvoteButton) {
+    console.error(`Error: Buttons not found for ${type} with ID ${id}`);
+    return;
+  }
   // Reset styles
   upvoteButton.classList.remove('voted');
   downvoteButton.classList.remove('voted');

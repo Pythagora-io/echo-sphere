@@ -25,8 +25,8 @@
           <% } %>
           <div class="mt-4 text-sm text-gray-600 italic">Posted by <%= post.author.username %> on <%= post.createdAt.toDateString() %></div>
           <div class="flex space-x-4 mt-4">
-            <button onclick="upvotePost('<%= post._id %>', event)" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
-            <button onclick="downvotePost('<%= post._id %>', event)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
+            <button id="post-upvote-<%= post._id %>" onclick="event.stopPropagation(); upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
+            <button id="post-downvote-<%= post._id %>" onclick="event.stopPropagation(); downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
             <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span> votes
           </div>
           <div class="mt-4">
@@ -45,100 +45,5 @@
 </main>
 <%- include('partials/_footer.ejs') %>
 <script src="/js/main.js"></script>
-<script>
-  function upvotePost(postId, event) {
-    event.stopPropagation();
-    fetch(`/votePost/${postId}/upvote`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({}),
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        document.getElementById(`post-${postId}-votes`).innerText = data.newVoteCount;
-        console.log('Upvote successful for post', postId);
-      } else {
-        console.error('Error upvoting post:', postId, data.message);
-      }
-    })
-    .catch(error => {
-      console.error('Error upvoting post:', postId, error);
-      console.error('Error details:', error.message);
-    });
-  }
-
-  function downvotePost(postId, event) {
-    event.stopPropagation();
-    fetch(`/votePost/${postId}/downvote`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({}),
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        document.getElementById(`post-${postId}-votes`).innerText = data.newVoteCount;
-        console.log('Downvote successful for post', postId);
-      } else {
-        console.error('Error downvoting post:', postId, data.message);
-      }
-    })
-    .catch(error => {
-      console.error('Error downvoting post:', postId, error);
-      console.error('Error details:', error.message);
-    });
-  }
-
-  function subscribeToSubSphere(subSphereId) {
-    fetch(`/subscribeToSubSphere`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ subSphereId }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        console.log('Subscription successful to SubSphere', subSphereId);
-        location.reload(); // Reload the page to update the subscription status
-      } else {
-        console.error('Error subscribing to SubSphere:', subSphereId, data.message);
-      }
-    })
-    .catch(error => {
-      console.error('Error subscribing to SubSphere:', subSphereId, error);
-      console.error('Error details:', error.message);
-    });
-  }
-
-  function unsubscribeFromSubSphere(subSphereId) {
-    fetch(`/unsubscribeFromSubSphere`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ subSphereId }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        console.log('Unsubscription successful from SubSphere', subSphereId);
-        location.reload(); // Reload the page to update the subscription status
-      } else {
-        console.error('Error unsubscribing from SubSphere:', subSphereId, data.message);
-      }
-    })
-    .catch(error => {
-      console.error('Error unsubscribing from SubSphere:', subSphereId, error);
-      console.error('Error details:', error.message);
-    });
-  }
-</script>
 </body>
 </html>
