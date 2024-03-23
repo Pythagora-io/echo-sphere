@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/_head.ejs') %>
+<body>
+<%- include('partials/_header.ejs') %>
+<main role="main">
+  <div class="container mt-5">
+    <h2>Edit SubSphere</h2>
+    <form action="/editSubSphere/<%= subSphere._id %>" method="POST">
+      <div class="mb-3">
+        <input type="text" name="name" value="<%= subSphere.name %>" required class="form-control">
+      </div>
+      <div class="mb-3">
+        <textarea name="description" required class="form-control"><%= subSphere.description %></textarea>
+      </div>
+      <div class="mb-3">
+        <input type="text" name="flares" value="<%= subSphere.flares.join(',') %>" class="form-control">
+      </div>
+      <!-- Add more inputs for settings as needed -->
+      <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Update SubSphere</button>
+      </div>
+    </form>
+  </div>
+</main>
+</body>
+<%- include('partials/_footer.ejs') %>
+</html>

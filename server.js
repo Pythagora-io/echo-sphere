@@ -6,6 +6,7 @@ const session = require("express-session");
 const MongoStore = require('connect-mongo');
 const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require('./routes/profileRoutes'); // Added profile routes
+const subSphereRoutes = require('./routes/subSphereRoutes'); // Added SubSphere routes
 
 if (!process.env.DATABASE_URL || !process.env.SESSION_SECRET) {
   console.error("Error: config environment variables not set. Please create/edit .env configuration file.");
@@ -74,6 +75,9 @@ app.use(authRoutes);
 
 // Profile Routes
 app.use(profileRoutes); // Use the profile routes
+
+// SubSphere Routes
+app.use(subSphereRoutes); // Use the SubSphere routes
 
 // Root path response
 app.get("/", (req, res) => {
