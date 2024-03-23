@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/_head.ejs') %>
+<body class="bg-gray-100">
+<%- include('../partials/_header.ejs') %>
+<main role="main" class="mt-10">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 class="text-2xl font-bold mb-6"><%= post.type.toUpperCase() %> Post</h2>
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <h3 class="text-xl font-bold mb-2"><%= post.title %></h3>
+      <% if (post.type === 'image') { %>
+        <img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto">
+      <% } else if (post.type === 'video') { %>
+        <video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video>
+      <% } else if (post.type === 'link') { %>
+        <a href="<%= post.content %>" target="_blank" rel="noopener noreferrer"><%= post.content %></a>
+      <% } else { %>
+        <p><%= post.content %></p>
+      <% } %>
+      <p class="mt-4 bg-gray-100 p-2 rounded text-sm text-gray-600">Posted by <%= post.author.username %> on <%= post.createdAt.toDateString() %></p>
+      <div class="mt-4">
+        <button onclick="upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
+        <button onclick="downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
+        <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span> votes
+      </div>
+    </div>
+    <h3 class="text-2xl font-bold mb-6">Comments</h3>
+    <% comments.forEach(function(comment) { %>
+      <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <p class="text-gray-700 text-base mb-4"><%= comment.content %></p>
+        <p>Commented by <%= comment.author.username %> on <%= comment.createdAt.toDateString() %></p>
+        <div class="flex items-center justify-between">
+          <button onclick="upvoteComment('<%= comment._id %>')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
+          <button onclick="downvoteComment('<%= comment._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
+          <span>Votes: <span id="comment-<%= comment._id %>-votes"><%= comment.upvotes - comment.downvotes %></span></span>
+        </div>
+      </div>
+    <% }); %>
+    <form action="/createComment" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <input type="hidden" name="postId" value="<%= post._id %>" />
+      <div class="mb-4">
+        <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Comment:</label>
+        <textarea name="content" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+      </div>
+      <div class="flex items-center justify-between">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Post Comment</button>
+      </div>
+    </form>
+  </div>
+</main>
+<%- include('../partials/_footer.ejs') %>
+<script src="/js/main.js"></script>
+<script>
+  function upvotePost(postId) {
+    fetch(`/votePost/${postId}/upvote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById(`post-${postId}-votes`).innerText = data.newVoteCount;
+        console.log('Upvote successful for post');
+      } else {
+        console.error('Error upvoting post:', data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error upvoting post:', error);
+      console.error('Error details:', error.message);
+    });
+  }
+
+  function downvotePost(postId) {
+    fetch(`/votePost/${postId}/downvote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById(`post-${postId}-votes`).innerText = data.newVoteCount;
+        console.log('Downvote successful for post');
+      } else {
+        console.error('Error downvoting post:', data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error downvoting post:', error);
+      console.error('Error details:', error.message);
+    });
+  }
+
+  function upvoteComment(commentId) {
+    fetch(`/voteComment/${commentId}/upvote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById(`comment-${commentId}-votes`).innerText = data.newVoteCount;
+        console.log('Upvote successful for comment');
+      } else {
+        console.error('Error upvoting comment:', data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error upvoting comment:', error);
+      console.error('Error details:', error.message);
+    });
+  }
+
+  function downvoteComment(commentId) {
+    fetch(`/voteComment/${commentId}/downvote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById(`comment-${commentId}-votes`).innerText = data.newVoteCount;
+        console.log('Downvote successful for comment');
+      } else {
+        console.error('Error downvoting comment:', data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error downvoting comment:', error);
+      console.error('Error details:', error.message);
+    });
+  }
+</script>
+</body>
+</html>

@@ -9,8 +9,15 @@
     <% if(posts.length > 0) { %>
       <% posts.forEach(function(post) { %>
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h3 class="text-xl font-bold mb-2"><%= post.type.toUpperCase() %></h3>
-          <p><%= post.content %></p>
+          <% if (post.type === 'image') { %>
+            <a href="/posts/<%= post._id %>"><img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto"></a>
+          <% } else if (post.type === 'video') { %>
+            <a href="/posts/<%= post._id %>"><video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video></a>
+          <% } else if (post.type === 'link') { %>
+            <a href="<%= post.content %>" target="_blank" rel="noopener noreferrer" class="text-xl font-bold mb-2"><%= post.content %></a>
+          <% } else { %>
+            <a href="/posts/<%= post._id %>" class="text-xl font-bold mb-2"><%= post.content %></a>
+          <% } %>
           <!-- Additional post details like author and timestamps can be added here -->
         </div>
       <% }); %>

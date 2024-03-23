@@ -8,19 +8,27 @@
     <h2 class="text-2xl font-bold mb-6">SubSpheres</h2>
     <section>
       <h3 class="text-xl font-bold mb-4">Moderated SubSpheres</h3>
-      <% moderatedSubSpheres.forEach(function(subSphere) { %>
-        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <a href="/subSphere/<%= subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700"><%= subSphere.name %></a>
-        </div>
-      <% }); %>
+      <% if (moderatedSubSpheres.length > 0) { %>
+        <% moderatedSubSpheres.forEach(function(subSphere) { %>
+          <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <a href="/subSphere/<%= subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700"><%= subSphere.name %></a>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p class="text-gray-700">You are not moderating any SubSpheres yet. <a href="/createSubSphere" class="text-blue-500 hover:text-blue-700">Create one now!</a></p>
+      <% } %>
     </section>
     <section>
       <h3 class="text-xl font-bold mb-4">Subscribed SubSpheres</h3>
-      <% subscribedSubSpheres.forEach(function(subSphere) { %>
-        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <a href="/subSphere/<%= subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700"><%= subSphere.name %></a>
-        </div>
-      <% }); %>
+      <% if (subscribedSubSpheres.length > 0) { %>
+        <% subscribedSubSpheres.forEach(function(subSphere) { %>
+          <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <a href="/subSphere/<%= subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700"><%= subSphere.name %></a>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p class="text-gray-700">You have not subscribed to any SubSpheres yet. Explore and <a href="/subSpheresList" class="text-blue-500 hover:text-blue-700">join SubSpheres</a> to see their posts.</p>
+      <% } %>
     </section>
   </div>
 </main>

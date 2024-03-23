@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const { isAuthenticated } = require('./middleware/authMiddleware');
 const Post = require('../models/Post');
+const Comment = require('../models/Comment'); // Import Comment model for fetching comments
 const SubSphere = require('../models/SubSphere'); // Import SubSphere model to query available SubSpheres
 const User = require('../models/User'); // Import User model for user-specific queries
 const mongoose = require('mongoose'); // Import mongoose to use ObjectId for comparison
@@ -37,11 +38,10 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 // GET route for the create post page
 router.get('/createPost', isAuthenticated, async (req, res) => {
   try {
-    // Fetch all SubSpheres and filter those where the user is a subscriber
     const allSubSpheres = await SubSphere.find();
     const userSubscribedSubSpheres = allSubSpheres.filter(subSphere => subSphere.subscribers.map(subscriber => subscriber.toString()).includes(req.session.userId.toString()));
     const moderatorSubSpheres = await SubSphere.find({ moderators: req.session.userId });
-    const subSphereIds = [...new Set([...moderatorSubSpheres.map(sphere => sphere._id.toString()), ...userSubscribedSubSpheres.map(sphere => sphere._id.toString())])]; // Combine and remove duplicates
+    const subSphereIds = [...new Set([...moderatorSubSpheres.map(sphere => sphere._id.toString()), ...userSubscribedSubSpheres.map(sphere => sphere._id.toString())])];
     const uniqueSubSpheres = await SubSphere.find({ '_id': { $in: subSphereIds } });
     if (uniqueSubSpheres.length > 0) {
       res.render('posts/createPost', { subSpheres: uniqueSubSpheres });
@@ -74,7 +74,7 @@ router.post('/createPost', isAuthenticated, upload.single('content'), async (req
       ...req.body,
       content: postContent,
       author: req.session.userId,
-      subSphere: req.body.subSphere // Use the selected SubSphere from the dropdown
+      subSphere: req.body.subSphere
     });
 
     console.log(`New post created with ID: ${newPost._id}`);
@@ -86,6 +86,22 @@ router.post('/createPost', isAuthenticated, upload.single('content'), async (req
   }
 });
 
-// Add more routes as needed for editing and deleting posts
+// GET route for viewing a single post's details along with its comments
+router.get('/posts/:postId', isAuthenticated, async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const post = await Post.findById(postId).populate('author');
+    const comments = await Comment.find({ post: postId }).populate('author');
+    if (!post) {
+      console.log('Post not found');
+      return res.status(404).send('Post not found');
+    }
+    res.render('posts/postDetails', { post, comments });
+  } catch (error) {
+    console.error('Error fetching post details:', error);
+    console.error(error.stack);
+    res.status(500).send('Failed to fetch post details.');
+  }
+});
 
 module.exports = router;
