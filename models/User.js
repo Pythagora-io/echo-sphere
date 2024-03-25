@@ -10,7 +10,10 @@ const userSchema = new mongoose.Schema({
   settings: {
     darkMode: { type: Boolean, default: false },
     notifications: { type: Boolean, default: true },
-  }
+  },
+  followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  karma: { type: Number, default: 1 } // Added karma field with default value of 1
 });
 
 userSchema.pre('save', function(next) {
