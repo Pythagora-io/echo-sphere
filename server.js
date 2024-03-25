@@ -103,7 +103,11 @@ app.use(userRoutes); // Use the user routes
 
 // Root path response
 app.get("/", (req, res) => {
-  res.render("index");
+  if (req.session && req.session.userId) {
+    res.redirect('/users/' + req.session.userId);
+  } else {
+    res.render("index");
+  }
 });
 
 // If no routes handled the request, it's a 404

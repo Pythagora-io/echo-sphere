@@ -23,7 +23,7 @@
           <% } else { %>
             <p class="text-xl font-bold mb-2"><%= post.content %></p>
           <% } %>
-          <div class="mt-4 text-sm text-gray-600 italic">Posted by <%= post.author.username %> on <%= post.createdAt.toDateString() %></div>
+          <div class="mt-4 text-sm text-gray-600 italic">Posted by <a href="/users/<%= post.author._id %>" class="underline"><%= post.author.username %></a> on <%= post.createdAt.toDateString() %></div>
           <div class="flex space-x-4 mt-4">
             <button id="post-upvote-<%= post._id %>" onclick="event.stopPropagation(); upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
             <button id="post-downvote-<%= post._id %>" onclick="event.stopPropagation(); downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>

@@ -6,9 +6,9 @@
 <main role="main" class="mt-10">
   <div class="max-w-4xl mx-auto px-4">
     <h2 class="text-2xl font-bold mb-6">User Page</h2>
-    <div class="tabs flex justify-center gap-4 mb-4">
-      <button class="tab-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="openTab(event, 'Posts')">Posts</button>
-      <button class="tab-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="openTab(event, 'Comments')">Comments</button>
+    <div class="tabs flex justify-start gap-4 mb-4">
+      <button class="tab-button bg-gradient-to-r from-blue-500 to-teal-500 hover:from-teal-500 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg" onclick="openTab(event, 'Posts')">Posts</button>
+      <button class="tab-button bg-gradient-to-r from-blue-500 to-teal-500 hover:from-teal-500 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg" onclick="openTab(event, 'Comments')">Comments</button>
     </div>
     <div id="Posts" class="tab-content">
       <% posts.forEach(function(post) { %>
@@ -16,6 +16,10 @@
           <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <a href="/subSphere/<%= post.subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700 font-bold"><%= post.subSphere.name %></a>
             <a href="<%= post.content %>" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700"><%= post.content %></a>
+            <p class="text-sm text-gray-500">Created on <%= new Date(post.createdAt).toLocaleString() %></p>
+            <p>Total Votes: <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span></p>
+            <button id="post-upvote-<%= post._id %>" onclick="upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
+            <button id="post-downvote-<%= post._id %>" onclick="downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
           </div>
         <% } else { %>
           <a href="/posts/<%= post._id %>" class="block">
@@ -28,6 +32,10 @@
               <% } else { %>
                 <p><%= post.content %></p>
               <% } %>
+              <p class="text-sm text-gray-500">Created on <%= new Date(post.createdAt).toLocaleString() %></p>
+              <p>Total Votes: <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span></p>
+              <button id="post-upvote-<%= post._id %>" onclick="upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
+              <button id="post-downvote-<%= post._id %>" onclick="downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
             </div>
           </a>
         <% } %>
@@ -39,6 +47,10 @@
           <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" id="comment-<%= comment._id %>">
             <a href="/subSphere/<%= comment.post.subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700 font-bold"><%= comment.post.subSphere.name %></a>
             <p class="text-gray-700 text-base mb-4"><%= comment.content %></p>
+            <p class="text-sm text-gray-500">Created on <%= new Date(comment.createdAt).toLocaleString() %></p>
+            <p>Total Votes: <span id="comment-<%= comment._id %>-votes"><%= comment.upvotes - comment.downvotes %></span></p>
+            <button onclick="upvoteComment('<%= comment._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
+            <button onclick="downvoteComment('<%= comment._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
           </div>
         </a>
       <% }); %>
@@ -57,6 +69,7 @@
     tabbuttons = document.getElementsByClassName("tab-button");
     for (i = 0; i < tabbuttons.length; i++) {
       tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+      tabbuttons[i].className = tabbuttons[i].className.replace(" bg-blue-700", " bg-gradient-to-r from-blue-500 to-teal-500 hover:from-teal-500 hover:to-blue-500");
     }
     document.getElementById(tabName).style.display = "block";
     evt.currentTarget.className += " active bg-blue-700";
