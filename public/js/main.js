@@ -186,4 +186,57 @@ $(document).ready(function() {
       unsubscribeFromSubSphere(subSphereId);
     });
   });
+
+  // Event listeners for follow and unfollow actions
+  document.querySelectorAll('.follow-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const userId = this.getAttribute('data-user-id');
+      fetch(`/follow/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log(data.message);
+          location.reload(); // Reload the page to update the follow status
+        } else {
+          console.error('Error following user:', userId, data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error following user:', userId, error);
+        console.error('Error details:', error.message);
+      });
+    });
+  });
+
+  document.querySelectorAll('.unfollow-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const userId = this.getAttribute('data-user-id');
+      fetch(`/unfollow/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log(data.message);
+          location.reload(); // Reload the page to update the unfollow status
+        } else {
+          console.error('Error unfollowing user:', userId, data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error unfollowing user:', userId, error);
+        console.error('Error details:', error.message);
+      });
+    });
+  });
 });
