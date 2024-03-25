@@ -90,7 +90,7 @@ router.post('/createPost', isAuthenticated, upload.single('content'), async (req
 router.get('/posts/:postId', isAuthenticated, async (req, res) => {
   try {
     const postId = req.params.postId;
-    const post = await Post.findById(postId).populate('author');
+    const post = await Post.findById(postId).populate('author').populate('subSphere');
     const comments = await Comment.find({ post: postId }).populate('author');
     if (!post) {
       console.log('Post not found');

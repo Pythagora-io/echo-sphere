@@ -7,6 +7,9 @@
   <div class="max-w-4xl mx-auto px-4">
     <h2 class="text-2xl font-bold mb-6"><%= post.type.toUpperCase() %> Post</h2>
     <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <p class="mt-4">
+        <a href="/subSphere/<%= post.subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700 font-bold"><%= post.subSphere.name %></a>
+      </p>
       <h3 class="text-xl font-bold mb-2"><%= post.title %></h3>
       <% if (post.type === 'image') { %>
         <img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto">
@@ -26,9 +29,9 @@
     </div>
     <h3 class="text-2xl font-bold mb-6">Comments</h3>
     <% comments.forEach(function(comment) { %>
-      <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" id="comment-<%= comment._id %>">
         <p class="text-gray-700 text-base mb-4"><%= comment.content %></p>
-        <p>Commented by <%= comment.author.username %> on <%= comment.createdAt.toDateString() %></p>
+        <p class="mt-4 bg-gray-100 p-2 rounded text-sm text-gray-600">Commented by <%= comment.author.username %> on <%= comment.createdAt.toDateString() %></p>
         <div class="flex items-center justify-between">
           <button id="comment-upvote-<%= comment._id %>" onclick="upvoteComment('<%= comment._id %>')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
           <button id="comment-downvote-<%= comment._id %>" onclick="downvoteComment('<%= comment._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
