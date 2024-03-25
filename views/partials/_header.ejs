@@ -6,13 +6,24 @@
         <li>
           <a class="text-gray-300 hover:text-white" href="/">Home</a>
         </li>
-        <li>
-          <% if (session && session.userId) { %>
-          <a class="text-gray-300 hover:text-white" href="/auth/logout">Logout</a>
-          <% } else { %>
-          <a class="text-gray-300 hover:text-white" href="/auth/login">Login</a>
-          <% } %>
-        </li>
+        <% if (session && session.userId) { %>
+          <li>
+            <a class="text-gray-300 hover:text-white" href="/subSpheresList">SubSpheres</a>
+          </li>
+          <li>
+            <a class="text-gray-300 hover:text-white" href="/profile">Profile</a>
+          </li>
+          <li>
+            <a class="text-gray-300 hover:text-white" href="/createPost">Create Post</a>
+          </li>
+          <li>
+            <a class="text-gray-300 hover:text-white" href="/auth/logout">Logout</a>
+          </li>
+        <% } else { %>
+          <li>
+            <a class="text-gray-300 hover:text-white" href="/auth/login">Login</a>
+          </li>
+        <% } %>
       </ul>
     </div>
   </div>
