@@ -16,6 +16,7 @@
           <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4">Follow</button>
         </form>
       <% } %>
+      <a href="/messages?recipientId=<%= user._id %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">Message</a>
     <% } %>
     <% if (user._id.toString() === session.userId.toString()) { %>
       <p>Your Karma: <%= karma %></p>

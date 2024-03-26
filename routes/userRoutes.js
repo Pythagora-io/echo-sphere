@@ -3,6 +3,7 @@ const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const SubSphere = require('../models/SubSphere');
 const User = require('../models/User');
+const Message = require('../models/Message'); // Import the Message model
 const { isAuthenticated } = require('./middleware/authMiddleware');
 const router = express.Router();
 
@@ -85,6 +86,30 @@ router.post('/unfollow/:userId', isAuthenticated, async (req, res) => {
     console.error('Error unfollowing user:', error);
     console.error(error.stack);
     res.status(500).json({ success: false, message: 'Failed to unfollow user' });
+  }
+});
+
+// Route to get a list of users who are recipients and conversating with the user
+router.get('/recipients', isAuthenticated, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    // Find all messages where the logged-in user is either the sender or the recipient
+    const messages = await Message.find({ $or: [{ sender: userId }, { recipient: userId }] });
+    // Extract user IDs from messages
+    const userIds = messages.reduce((acc, message) => {
+      acc.add(message.sender.toString());
+      acc.add(message.recipient.toString());
+      return acc;
+    }, new Set());
+    // Remove the logged-in user's ID from the set
+    userIds.delete(userId);
+    // Find users based on extracted IDs
+    const users = await User.find({ _id: { $in: Array.from(userIds) } }).select('username _id');
+    res.json({ success: true, users });
+  } catch (error) {
+    console.error('Error fetching users for messaging:', error);
+    console.error(error.stack);
+    res.status(500).json({ success: false, message: 'Failed to fetch users for messaging', error: error.message });
   }
 });
 

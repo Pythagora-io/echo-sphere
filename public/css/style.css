@@ -17,4 +17,37 @@
   @apply border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md shadow-sm;
 }
 
+/* Custom styles for the messaging UI */
+.message-panel {
+  @apply flex flex-col h-full;
+}
+
+.message-list {
+  @apply overflow-y-auto flex-1 p-4;
+}
+
+.message-item {
+  @apply mb-4 p-2 rounded-lg;
+}
+
+.message-item-sent {
+  @apply bg-blue-100 float-right clear-right;
+}
+
+.message-item-received {
+  @apply bg-gray-200 float-left clear-left;
+}
+
+.chat-input-container {
+  @apply flex-none;
+}
+
+.chat-input {
+  @apply border p-2 rounded w-full;
+}
+
+.chat-send-btn {
+  @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2;
+}
+
 /* Add more custom styles as needed */

@@ -11,9 +11,14 @@ const postRoutes = require('./routes/postRoutes'); // Added post routes
 const commentRoutes = require('./routes/commentRoutes'); // Added comment routes
 const voteRoutes = require('./routes/voteRoutes'); // Added vote routes
 const userRoutes = require('./routes/userRoutes'); // Added user routes
+const messageRoutes = require('./routes/messageRoutes'); // Added message routes
 const multer = require('multer'); // For handling multipart/form-data
 const path = require('path');
 const fs = require('fs');
+const http = require('http');
+const { Server } = require("socket.io");
+const Message = require('./models/Message'); // Import the Message model
+const Chat = require('./models/Chat'); // Import the Chat model
 
 if (!process.env.DATABASE_URL || !process.env.SESSION_SECRET) {
   console.error("Error: config environment variables not set. Please create/edit .env configuration file.");
@@ -58,6 +63,73 @@ app.use(
   }),
 );
 
+// Socket.io setup
+const server = http.createServer(app);
+const io = new Server(server);
+app.use((req, res, next) => {
+  res.locals.io = io;
+  next();
+});
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+
+  socket.on('registerUser', (userId) => {
+    socket.join(userId); // Joining a room named after the userId
+  });
+
+  socket.on('sendMessage', ({chatId, senderId, message}) => {
+    // Find or create a chat session based on chatId
+    Chat.findOne({ chatId: chatId }).then(chat => {
+      if (!chat) {
+        // If chat doesn't exist, create a new chat
+        // Assuming senderId and recipientId are available and correctly determined
+        const newChat = new Chat({
+          chatId: chatId,
+          participants: [senderId] // This needs to be adjusted based on how participants are determined
+        });
+        newChat.save().then(savedChat => {
+          const newMessage = new Message({
+            sender: senderId,
+            content: message,
+            chat: savedChat._id
+          });
+          newMessage.save().then(() => {
+            io.to(chatId).emit('receiveMessage', {senderId, message}); // Emitting to a room named after the chatId
+            console.log(`Message saved and sent from ${senderId} to chat ${chatId}: ${message}`);
+          }).catch(error => {
+            console.error(`Error saving message: ${error.message}`);
+            console.error(error.stack);
+          });
+        }).catch(error => {
+          console.error(`Error creating new chat: ${error.message}`);
+          console.error(error.stack);
+        });
+      } else {
+        // Create and save the message
+        const newMessage = new Message({
+          sender: senderId,
+          content: message,
+          chat: chat._id
+        });
+        newMessage.save().then(() => {
+          io.to(chatId).emit('receiveMessage', {senderId, message}); // Emitting to a room named after the chatId
+          console.log(`Message saved and sent from ${senderId} to chat ${chatId}: ${message}`);
+        }).catch(error => {
+          console.error(`Error saving message: ${error.message}`);
+          console.error(error.stack);
+        });
+      }
+    }).catch(error => {
+      console.error(`Error finding or creating chat: ${error.message}`);
+      console.error(error.stack);
+    });
+  });
+});
+
 app.on("error", (error) => {
   console.error(`Server error: ${error.message}`);
   console.error(error.stack);
@@ -101,6 +173,9 @@ app.use(voteRoutes); // Use the vote routes
 // User Routes
 app.use(userRoutes); // Use the user routes
 
+// Message Routes
+app.use('/messages', messageRoutes); // Use the message routes with '/messages' prefix
+
 // Root path response
 app.get("/", (req, res) => {
   if (req.session && req.session.userId) {
@@ -122,6 +197,7 @@ app.use((err, req, res, next) => {
   res.status(500).send("There was an error serving your request.");
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+// Replace app.listen with server.listen to integrate Socket.io
+server.listen(port, () => {
+  console.log(`Server running with Socket.io at http://localhost:${port}`);
 });
