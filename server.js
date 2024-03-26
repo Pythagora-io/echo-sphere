@@ -77,54 +77,33 @@ io.on('connection', (socket) => {
     console.log('user disconnected');
   });
 
-  socket.on('registerUser', (userId) => {
-    socket.join(userId); // Joining a room named after the userId
+  socket.on('joinChat', (chatId) => {
+    console.log(`User joined chat: ${chatId}`);
+    socket.join(chatId);
   });
 
   socket.on('sendMessage', ({chatId, senderId, message}) => {
-    // Find or create a chat session based on chatId
     Chat.findOne({ chatId: chatId }).then(chat => {
       if (!chat) {
-        // If chat doesn't exist, create a new chat
-        // Assuming senderId and recipientId are available and correctly determined
-        const newChat = new Chat({
-          chatId: chatId,
-          participants: [senderId] // This needs to be adjusted based on how participants are determined
-        });
-        newChat.save().then(savedChat => {
-          const newMessage = new Message({
-            sender: senderId,
-            content: message,
-            chat: savedChat._id
-          });
-          newMessage.save().then(() => {
-            io.to(chatId).emit('receiveMessage', {senderId, message}); // Emitting to a room named after the chatId
-            console.log(`Message saved and sent from ${senderId} to chat ${chatId}: ${message}`);
-          }).catch(error => {
-            console.error(`Error saving message: ${error.message}`);
-            console.error(error.stack);
-          });
-        }).catch(error => {
-          console.error(`Error creating new chat: ${error.message}`);
-          console.error(error.stack);
-        });
-      } else {
-        // Create and save the message
-        const newMessage = new Message({
-          sender: senderId,
-          content: message,
-          chat: chat._id
-        });
-        newMessage.save().then(() => {
-          io.to(chatId).emit('receiveMessage', {senderId, message}); // Emitting to a room named after the chatId
-          console.log(`Message saved and sent from ${senderId} to chat ${chatId}: ${message}`);
-        }).catch(error => {
-          console.error(`Error saving message: ${error.message}`);
-          console.error(error.stack);
-        });
+        console.error(`Chat not found for chatId: ${chatId}`);
+        // Emitting an error message back to the client
+        io.to(socket.id).emit('error', 'Chat not found');
+        return;
       }
+      const newMessage = new Message({
+        sender: senderId,
+        content: message,
+        chat: chat._id
+      });
+      newMessage.save().then(() => {
+        io.to(chatId).emit('receiveMessage', {senderId, message}); // Emitting to a room named after the chatId
+        console.log(`Message saved and sent from ${senderId} to chat ${chatId}: ${message}`);
+      }).catch(error => {
+        console.error(`Error saving message: ${error.message}`);
+        console.error(error.stack);
+      });
     }).catch(error => {
-      console.error(`Error finding or creating chat: ${error.message}`);
+      console.error(`Error finding chat: ${error.message}`);
       console.error(error.stack);
     });
   });

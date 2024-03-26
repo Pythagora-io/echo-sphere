@@ -46,18 +46,16 @@ router.get('/', isAuthenticated, async (req, res) => {
 // Route to get messages for a specific chat
 router.get('/:chatId', isAuthenticated, async (req, res) => {
   try {
-    const { chatId } = req.params;
-    const chat = await Chat.findOne({ chatId: chatId, participants: req.session.userId }).populate({
-      path: 'messages',
-      populate: {
-        path: 'sender',
-        select: 'username'
-      }
-    });
+    const chatId = req.params.chatId;
+    const chat = await Chat.findOne({ chatId: chatId });
     if (!chat) {
       return res.status(404).send('Chat not found');
     }
-    res.render('chatMessages', { chat, messages: chat.messages, currentUser: req.session.userId });
+    const messages = await Message.find({ chat: chat._id }).populate('sender', 'username');
+    if (messages.length === 0) {
+      return res.status(404).send('Messages not found');
+    }
+    res.json({ success: true, messages, currentUser: req.session.userId });
   } catch (error) {
     console.error('Error fetching messages for chat:', error);
     console.error(error.stack);
@@ -82,8 +80,6 @@ router.post('/send', isAuthenticated, async (req, res) => {
       chat: chat._id
     });
     await message.save();
-    chat.messages.push(message._id);
-    await chat.save();
 
     // Emit the message to the chat using Socket.io
     const io = req.app.get('socketio');
@@ -95,6 +91,20 @@ router.post('/send', isAuthenticated, async (req, res) => {
     console.error('Error sending message:', error);
     console.error(error.stack);
     res.status(500).send('Failed to send message');
+  }
+});
+
+// New Route to get all chats for the logged-in user
+router.get('/chats/all', isAuthenticated, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    // Fetch chats where the current user is a participant
+    const chats = await Chat.find({ participants: userId }).populate('participants', 'username');
+    res.json({ success: true, chats });
+  } catch (error) {
+    console.error('Error fetching all chats:', error);
+    console.error(error.stack);
+    res.status(500).json({ success: false, message: 'Failed to fetch all chats', error: error.message });
   }
 });
 

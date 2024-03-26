@@ -18,12 +18,19 @@ socket.on('receiveMessage', ({ chatId, senderId, message }) => {
 // Log connection status
 socket.on('connect', () => {
   console.log('Connected to WebSocket server.');
-  // Register the current user with their chat IDs
-  const chatIds = document.querySelectorAll('.chatId');
-  chatIds.forEach(chatIdElement => {
-    const chatId = chatIdElement.value;
-    socket.emit('joinChat', chatId);
-  });
+  fetch('/messages/chats/all')
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        data.chats.forEach(chat => {
+          socket.emit('joinChat', chat.chatId);
+        });
+      }
+    })
+    .catch(error => {
+      console.error('WebSocket connection error:', error.message);
+      console.error(error.stack);
+    });
 });
 
 socket.on('disconnect', () => {

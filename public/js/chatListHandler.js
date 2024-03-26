@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function fetchChats() {
-  fetch('/messages/chats') // Corrected endpoint to fetch chats
+  fetch('/messages/chats/all') // Updated endpoint to fetch chats
     .then(response => response.json())
     .then(data => {
       if (data.success) {
@@ -38,6 +38,7 @@ function selectChat(chatId) {
     .then(data => {
       if (data.success) {
         displayMessages(data.messages, chatId);
+        document.getElementById('chatId').value = chatId; // Update the hidden input element 'chatId' with the selected chat's ID
       } else {
         console.error('Failed to fetch messages for selected chat');
       }
@@ -53,7 +54,7 @@ function displayMessages(messages, chatId) {
   messagesContainer.innerHTML = ''; // Clear existing messages
   messages.forEach(message => {
     const messageElement = document.createElement('div');
-    messageElement.className = 'message ' + (message.sender._id === document.getElementById('userId').value ? 'sent' : 'received'); // Corrected logic to compare sender's ID
+    messageElement.className = 'message-item ' + (message.sender._id === document.getElementById('userId').value ? 'message-item-sent bg-blue-100 float-right clear-right text-right mr-2 p-2 rounded-lg' : 'message-item-received bg-gray-200 float-left clear-left text-left ml-2 p-2 rounded-lg'); // Corrected logic to compare sender's ID and applied Tailwind CSS classes for consistent styling
     messageElement.textContent = message.content;
     messagesContainer.appendChild(messageElement);
   });
