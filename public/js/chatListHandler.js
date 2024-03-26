@@ -30,7 +30,6 @@ function fetchChats() {
 }
 
 function selectChat(chatId) {
-  // Adjusted to handle chat selection based on chatId
   console.log(`Chat ${chatId} selected`);
   const messagesUrl = '/messages/' + chatId; // Corrected URL to fetch messages for the selected chat
   fetch(messagesUrl)
@@ -54,9 +53,13 @@ function displayMessages(messages, chatId) {
   messagesContainer.innerHTML = ''; // Clear existing messages
   messages.forEach(message => {
     const messageElement = document.createElement('div');
-    messageElement.className = 'message-item ' + (message.sender._id === document.getElementById('userId').value ? 'message-item-sent bg-blue-100 float-right clear-right text-right mr-2 p-2 rounded-lg' : 'message-item-received bg-gray-200 float-left clear-left text-left ml-2 p-2 rounded-lg'); // Corrected logic to compare sender's ID and applied Tailwind CSS classes for consistent styling
-    messageElement.textContent = message.content;
+    messageElement.className = 'flex flex-col mb-4 ' + (message.sender._id === document.getElementById('userId').value ? 'items-end' : 'items-start'); // Apply flex and margin classes for consistent styling
+    const messageContent = document.createElement('div');
+    messageContent.className = (message.sender._id === document.getElementById('userId').value ? 'bg-blue-100' : 'bg-gray-200') + ' rounded-lg p-2';
+    messageContent.innerText = message.content;
+    messageElement.appendChild(messageContent);
     messagesContainer.appendChild(messageElement);
   });
   console.log('Messages displayed for selected chat');
+  messagesContainer.scrollTop = messagesContainer.scrollHeight; // Automatically scroll to the bottom of the messages container
 }

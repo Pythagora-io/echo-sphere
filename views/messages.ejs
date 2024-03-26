@@ -24,8 +24,10 @@
     <div id="messages" class="space-y-4">
       <% if (messages && messages.length > 0) { %>
         <% messages.forEach(function(message) { %>
-          <div class="<%= message.sender._id.toString() === currentUser ? 'message-item message-item-sent bg-blue-100 float-right clear-right text-right mr-2 p-2 rounded-lg' : 'message-item message-item-received bg-gray-200 float-left clear-left text-left ml-2 p-2 rounded-lg' %>">
-            <p><%= message.content %></p>
+          <div class="flex flex-col mb-4">
+            <div class="<%= message.sender._id.toString() === currentUser ? 'ml-auto bg-blue-100' : 'mr-auto bg-gray-200' %> rounded-lg p-2">
+              <p><%= message.content %></p>
+            </div>
           </div>
         <% }); %>
       <% } else { %>

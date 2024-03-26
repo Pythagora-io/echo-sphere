@@ -5,14 +5,25 @@ function sendMessage(chatId, message) {
   const senderId = document.getElementById('userId').value; // Assuming there's an input or hidden field with the user's ID
   socket.emit('sendMessage', { chatId, senderId, message });
   console.log(`Message sent from ${senderId} in chat ${chatId}: ${message}`);
-  // Do not immediately display the message on the sender's UI
 }
 
 socket.on('receiveMessage', ({ chatId, senderId, message }) => {
   console.log(`Message received in chat ${chatId} from ${senderId}: ${message}`);
   // Display the message on the UI for both sender and receiver with correct styling
-  const className = senderId === document.getElementById('userId').value ? 'message-item-sent bg-blue-100 float-right clear-right text-right mr-2 p-2 rounded-lg' : 'message-item-received bg-gray-200 float-left clear-left text-left ml-2 p-2 rounded-lg';
-  displayMessage(message, className.split(' '));
+  const userId = document.getElementById('userId').value;
+  const messageContainer = document.getElementById('messages');
+  const messageElement = document.createElement('div');
+  messageElement.classList.add('flex', 'flex-col', 'mb-4');
+  if (senderId === userId) {
+    messageElement.classList.add('items-end');
+    messageElement.innerHTML = `<div class="bg-blue-100 float-right clear-right text-right mr-2 p-2 rounded-lg">${message}</div>`;
+  } else {
+    messageElement.classList.add('items-start');
+    messageElement.innerHTML = `<div class="bg-gray-200 float-left clear-left text-left ml-2 p-2 rounded-lg">${message}</div>`;
+  }
+  messageContainer.appendChild(messageElement);
+  // Automatically scroll to the bottom of the message container to show the latest message
+  messageContainer.scrollTop = messageContainer.scrollHeight;
 });
 
 // Log connection status
@@ -55,15 +66,3 @@ document.getElementById('sendMessageForm').addEventListener('submit', function(e
     console.log('Message is empty. Not sending.');
   }
 });
-
-// Function to display a message in the UI
-function displayMessage(message, className) {
-  const messageContainer = document.getElementById('messages');
-  const messageElement = document.createElement('div');
-  messageElement.classList.add('message-item', ...className);
-  messageElement.innerHTML = `<p>${message}</p>`;
-  // Ensure new messages are appended at the bottom of the message container
-  messageContainer.appendChild(messageElement);
-  // Automatically scroll to the bottom of the message container to show the latest message
-  messageContainer.scrollTop = messageContainer.scrollHeight;
-}
