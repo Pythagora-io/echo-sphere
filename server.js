@@ -96,7 +96,7 @@ io.on('connection', (socket) => {
         chat: chat._id
       });
       newMessage.save().then(() => {
-        io.to(chatId).emit('receiveMessage', {senderId, message}); // Emitting to a room named after the chatId
+        io.to(chatId).emit('receiveMessage', {senderId, message, chatId}); // Emitting to a room named after the chatId, including chatId in the emitted data
         console.log(`Message saved and sent from ${senderId} to chat ${chatId}: ${message}`);
       }).catch(error => {
         console.error(`Error saving message: ${error.message}`);
