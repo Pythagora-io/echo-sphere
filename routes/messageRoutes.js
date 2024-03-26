@@ -14,7 +14,12 @@ router.get('/', isAuthenticated, async (req, res) => {
     let selectedChatId = null;
     let messages = [];
 
-    const chats = await Chat.find({ participants: userId }).populate('participants', 'username');
+    // Fetch chats where the current user is a participant
+    const chats = await Chat.find({ participants: userId }).populate({
+      path: 'participants',
+      match: { _id: { $ne: userId } }, // Exclude the current user from the participants list
+      select: 'username'
+    });
 
     if (recipientId) {
       let chat = await Chat.findOne({ participants: { $all: [userId, recipientId] } });

@@ -9,9 +9,13 @@
       <h2 class="font-bold text-lg mb-4">Chats</h2>
       <ul id="chatList" class="divide-y divide-gray-400">
         <% chats.forEach(function(chat) { %>
-          <li class="<%= selectedChatId === chat.chatId ? 'bg-gray-300' : '' %> p-2 rounded hover:bg-gray-400 cursor-pointer" onclick="selectChat('<%= chat.chatId %>')">
-            <%= chat.participants.map(participant => participant.username).join(', ') %>
-          </li>
+          <% chat.participants.forEach(function(participant) { %>
+            <% if (participant._id.toString() !== currentUser) { %>
+              <li class="<%= selectedChatId === chat.chatId ? 'bg-gray-300' : '' %> p-2 rounded hover:bg-gray-400 cursor-pointer" onclick="selectChat('<%= chat.chatId %>')">
+                <%= participant.username %>
+              </li>
+            <% } %>
+          <% }); %>
         <% }); %>
       </ul>
     </div>
@@ -20,7 +24,7 @@
     <div id="messages" class="space-y-4">
       <% if (messages && messages.length > 0) { %>
         <% messages.forEach(function(message) { %>
-          <div class="message-item <%= message.sender._id.toString() === currentUser ? 'message-item-sent' : 'message-item-received' %>">
+          <div class="<%= message.sender._id.toString() === currentUser ? 'message-item message-item-sent bg-blue-100 float-right clear-right text-right mr-2 p-2 rounded-lg' : 'message-item message-item-received bg-gray-200 float-left clear-left text-left ml-2 p-2 rounded-lg' %>">
             <p><%= message.content %></p>
           </div>
         <% }); %>
