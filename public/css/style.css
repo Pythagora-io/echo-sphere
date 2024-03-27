@@ -51,3 +51,8 @@
 }
 
 /* Add more custom styles as needed */
+
+/* Tailwind CSS style for 'highlight' class */
+.highlight {
+  @apply bg-yellow-500 text-white font-bold;
+}

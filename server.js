@@ -12,6 +12,7 @@ const commentRoutes = require('./routes/commentRoutes'); // Added comment routes
 const voteRoutes = require('./routes/voteRoutes'); // Added vote routes
 const userRoutes = require('./routes/userRoutes'); // Added user routes
 const messageRoutes = require('./routes/messageRoutes'); // Added message routes
+const notificationRoutes = require('./routes/notificationRoutes'); // Added notification routes
 const multer = require('multer'); // For handling multipart/form-data
 const path = require('path');
 const fs = require('fs');
@@ -19,6 +20,7 @@ const http = require('http');
 const { Server } = require("socket.io");
 const Message = require('./models/Message'); // Import the Message model
 const Chat = require('./models/Chat'); // Import the Chat model
+const Notification = require('./models/Notification'); // Import the Notification model
 
 if (!process.env.DATABASE_URL || !process.env.SESSION_SECRET) {
   console.error("Error: config environment variables not set. Please create/edit .env configuration file.");
@@ -54,25 +56,34 @@ mongoose
   });
 
 // Session configuration with connect-mongo
-app.use(
-  session({
+const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }),
-  }),
-);
+  });
+
+app.use(sessionMiddleware);
 
 // Socket.io setup
 const server = http.createServer(app);
 const io = new Server(server);
-app.use((req, res, next) => {
-  res.locals.io = io;
-  next();
+app.set('socketio', io); // Make io available in routes
+
+io.use((socket, next) => {
+  sessionMiddleware(socket.request, {}, next);
 });
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+  if (socket.request.session && socket.request.session.userId) {
+    const userId = socket.request.session.userId;
+    socket.join(userId.toString());
+    console.log(`User ${userId} joined room: ${userId}`);
+  } else {
+    console.error("Session or userId not found for socket connection.");
+  }
+
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
@@ -98,6 +109,12 @@ io.on('connection', (socket) => {
       newMessage.save().then(() => {
         io.to(chatId).emit('receiveMessage', {senderId, message, chatId}); // Emitting to a room named after the chatId, including chatId in the emitted data
         console.log(`Message saved and sent from ${senderId} to chat ${chatId}: ${message}`);
+        // Emit notification to recipient's room
+        chat.participants.forEach(participant => {
+          if (participant.toString() !== senderId) {
+            io.to(participant.toString()).emit('notification', {type: 'newMessage', content: 'You have a new message', chatId: chatId});
+          }
+        });
       }).catch(error => {
         console.error(`Error saving message: ${error.message}`);
         console.error(error.stack);
@@ -154,6 +171,9 @@ app.use(userRoutes); // Use the user routes
 
 // Message Routes
 app.use('/messages', messageRoutes); // Use the message routes with '/messages' prefix
+
+// Notification Routes
+app.use('/notifications', notificationRoutes); // Use the notification routes
 
 // Root path response
 app.get("/", (req, res) => {

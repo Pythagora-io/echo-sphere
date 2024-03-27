@@ -2,6 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   fetchChats();
+  listenForNotifications();
 });
 
 function fetchChats() {
@@ -15,6 +16,7 @@ function fetchChats() {
           const listItem = document.createElement('li');
           listItem.textContent = chat.participants.filter(participant => participant._id !== document.getElementById('userId').value).map(participant => participant.username).join(', '); // Displaying only the recipient's username, excluding the current user
           listItem.className = 'p-2 bg-gray-300 mb-2 rounded hover:bg-gray-400 cursor-pointer';
+          listItem.setAttribute('data-chat-id', chat.chatId); // Use data attribute to store chatId
           listItem.onclick = () => selectChat(chat.chatId); // Adjusted to use chatId for chat selection
           chatListElement.appendChild(listItem);
         });
@@ -62,4 +64,28 @@ function displayMessages(messages, chatId) {
   });
   console.log('Messages displayed for selected chat');
   messagesContainer.scrollTop = messagesContainer.scrollHeight; // Automatically scroll to the bottom of the messages container
+}
+
+function listenForNotifications() {
+  const socket = io();
+  socket.on('notification', (notification) => {
+    console.log('New notification received:', notification);
+    // Handle different types of notifications
+    switch (notification.type) {
+      case 'newMessage':
+        const chatListElement = document.getElementById('chatList');
+        const chatItems = chatListElement.querySelectorAll('li[data-chat-id]');
+        chatItems.forEach(item => {
+          if (item.getAttribute('data-chat-id') === notification.chatId) {
+            item.style.fontWeight = 'bold'; // Highlight chat with new message
+          }
+        });
+        break;
+      case 'newComment':
+        // Additional handling for new comment notifications can be implemented here
+        console.log('New comment notification received for post:', notification.postId);
+        break;
+      // Add more cases as needed for different notification types
+    }
+  });
 }

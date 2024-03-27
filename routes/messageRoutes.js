@@ -4,6 +4,7 @@ const isAuthenticated = require('./middleware/authMiddleware').isAuthenticated;
 const Message = require('../models/Message');
 const User = require('../models/User');
 const Chat = require('../models/Chat');
+const Notification = require('../models/Notification'); // Import the Notification model
 const { v4: uuidv4 } = require('uuid');
 
 // Route to get all chats for the logged-in user or initiate a chat with a specific user
@@ -84,6 +85,21 @@ router.post('/send', isAuthenticated, async (req, res) => {
     // Emit the message to the chat using Socket.io
     const io = req.app.get('socketio');
     io.to(chat.chatId).emit('receiveMessage', { senderId: req.session.userId, message: content, chatId: chat.chatId });
+
+    // Create a notification for the message
+    const sender = await User.findById(req.session.userId);
+    const participants = chat.participants.filter(participant => participant.toString() !== req.session.userId);
+    const createNotifications = participants.map(async participant => {
+      const notification = new Notification({
+        user: participant,
+        type: 'newMessage',
+        content: `You have a new message from ${sender.username}`, // Displaying the sender's username in the notification content
+        isRead: false
+      });
+      await notification.save();
+      io.to(participant.toString()).emit('notification', { type: 'newMessage', content: notification.content, timestamp: notification.timestamp });
+    });
+    await Promise.all(createNotifications);
 
     console.log(`Message sent from ${req.session.userId} to chat ${chat.chatId}: ${content}`);
     res.redirect(`/messages/${chat.chatId}`); // Redirect to the chat page

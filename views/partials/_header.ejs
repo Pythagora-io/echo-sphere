@@ -3,10 +3,10 @@
     <a class="text-white text-lg font-bold" href="/">New_EchoSphere</a>
     <div>
       <ul class="flex space-x-4">
-        <li>
-          <a class="text-gray-300 hover:text-white" href="/">Home</a>
-        </li>
-        <% if (session && session.userId) { %>
+        <% if (typeof session.userId !== 'undefined') { %>
+          <li>
+            <a class="text-gray-300 hover:text-white" href="/">Home</a>
+          </li>
           <li>
             <a class="text-gray-300 hover:text-white" href="/subSpheresList">SubSpheres</a>
           </li>
@@ -20,11 +20,20 @@
             <a class="text-gray-300 hover:text-white" href="/messages">Messages</a>
           </li>
           <li>
+            <a class="text-gray-300 hover:text-white" href="/notifications">Notifications</a>
+          </li>
+          <li>
             <a class="text-gray-300 hover:text-white" href="/auth/logout">Logout</a>
           </li>
         <% } else { %>
           <li>
+            <a class="text-gray-300 hover:text-white" href="/">Home</a>
+          </li>
+          <li>
             <a class="text-gray-300 hover:text-white" href="/auth/login">Login</a>
+          </li>
+          <li>
+            <a class="text-gray-300 hover:text-white" href="/auth/register">Register</a>
           </li>
         <% } %>
       </ul>

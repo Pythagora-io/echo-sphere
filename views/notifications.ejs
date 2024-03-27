@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notifications</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-gray-100" data-user-id="<%= session.userId %>">
+<%- include('partials/_header.ejs') %>
+<main role="main" class="max-w-4xl mx-auto mt-4">
+  <div class="text-center">
+    <h1 class="text-4xl font-bold">Notifications</h1>
+    <button id="markAllAsReadButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">Mark all as read</button>
+    <div id="notificationsContainer" class="mt-6">
+      <% if (notifications && notifications.length > 0) { %>
+        <% notifications.forEach(function(notification) { %>
+          <div class="<%= !notification.isRead ? 'bg-blue-100' : 'bg-white' %> shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <p class="text-gray-700 text-base"><%= notification.content %></p>
+            <p class="text-gray-600 text-xs">Received on <%= new Date(notification.timestamp).toLocaleString() %></p>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p>No notifications found.</p>
+      <% } %>
+    </div>
+  </div>
+</main>
+<%- include('partials/_footer.ejs') %>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/notifications.js"></script>
+<script>
+  document.getElementById('markAllAsReadButton').addEventListener('click', function() {
+    fetch('/notifications/markAllAsRead', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log('All notifications marked as read');
+        // Reload the notifications to reflect the changes
+        window.location.reload();
+      } else {
+        console.error('Failed to mark all notifications as read');
+      }
+    })
+    .catch(error => {
+      console.error('Error marking all notifications as read:', error.message);
+      console.error(error.stack);
+    });
+  });
+</script>
+</body>
+</html>
