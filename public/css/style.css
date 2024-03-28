@@ -56,3 +56,8 @@
 .highlight {
   @apply bg-yellow-500 text-white font-bold;
 }
+
+/* Style for visually distinguishing chat list items with unread messages */
+.unread-message {
+  @apply bg-red-100 border-l-4 border-red-500;
+}

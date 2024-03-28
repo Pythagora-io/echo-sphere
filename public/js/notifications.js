@@ -2,6 +2,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const socket = io();
   checkUnreadNotifications();
 
+  function highlightUnreadMessages(username) {
+    if (window.location.pathname === '/messages') {
+      const chatListItems = document.querySelectorAll('#chatList li');
+      chatListItems.forEach(item => {
+        if (item.textContent.includes(username)) {
+          item.classList.add('unread-message');
+        }
+      });
+    }
+  }
+
+  function handleNewMessageNotification(notification) {
+    const usernameRegex = /You have a new message from (.+)/;
+    const matches = notification.content.match(usernameRegex);
+    if (matches && matches[1]) {
+      highlightUnreadMessages(matches[1]);
+    }
+    const messagesLink = document.querySelector('a[href="/messages"]');
+    messagesLink.classList.add('highlight');
+    messagesLink.dataset.messages = 'new';
+  }
+
   socket.on('notification', (notification) => {
     console.log('New notification received:', notification);
     if (notification.type === 'newComment') {
@@ -9,9 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
       notificationsLink.classList.add('highlight');
       notificationsLink.dataset.notifications = 'new';
     } else if (notification.type === 'newMessage') {
-      const messagesLink = document.querySelector('a[href="/messages"]');
-      messagesLink.classList.add('highlight');
-      messagesLink.dataset.messages = 'new';
+      handleNewMessageNotification(notification);
     }
   });
 
@@ -28,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
           data.notifications.forEach(notification => {
             if (notification.type === 'newMessage') {
               hasUnreadMessages = true;
+              handleNewMessageNotification(notification);
             } else {
               hasOtherUnreadNotifications = true;
             }

@@ -21,6 +21,7 @@ const { Server } = require("socket.io");
 const Message = require('./models/Message'); // Import the Message model
 const Chat = require('./models/Chat'); // Import the Chat model
 const Notification = require('./models/Notification'); // Import the Notification model
+const notificationHandler = require('./utils/notificationHandler'); // Import the notificationHandler utility
 
 if (!process.env.DATABASE_URL || !process.env.SESSION_SECRET) {
   console.error("Error: config environment variables not set. Please create/edit .env configuration file.");
@@ -106,15 +107,11 @@ io.on('connection', (socket) => {
         content: message,
         chat: chat._id
       });
-      newMessage.save().then(() => {
+      newMessage.save().then(savedMessage => {
         io.to(chatId).emit('receiveMessage', {senderId, message, chatId}); // Emitting to a room named after the chatId, including chatId in the emitted data
         console.log(`Message saved and sent from ${senderId} to chat ${chatId}: ${message}`);
-        // Emit notification to recipient's room
-        chat.participants.forEach(participant => {
-          if (participant.toString() !== senderId) {
-            io.to(participant.toString()).emit('notification', {type: 'newMessage', content: 'You have a new message', chatId: chatId});
-          }
-        });
+        // Use notificationHandler to create and emit notifications
+        notificationHandler.createMessageNotification(savedMessage._id, chatId, io);
       }).catch(error => {
         console.error(`Error saving message: ${error.message}`);
         console.error(error.stack);

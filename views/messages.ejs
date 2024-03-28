@@ -11,7 +11,7 @@
         <% chats.forEach(function(chat) { %>
           <% chat.participants.forEach(function(participant) { %>
             <% if (participant._id.toString() !== currentUser) { %>
-              <li class="<%= selectedChatId === chat.chatId ? 'bg-gray-300' : '' %> p-2 rounded hover:bg-gray-400 cursor-pointer" onclick="selectChat('<%= chat.chatId %>')">
+              <li class="<%= selectedChatId === chat.chatId ? 'bg-gray-300' : '' %> p-2 rounded hover:bg-gray-400 cursor-pointer" onclick="selectChat('<%= chat.chatId %>')" data-chat-id="<%= chat.chatId %>">
                 <%= participant.username %>
               </li>
             <% } %>
@@ -47,6 +47,7 @@
 <%- include('partials/_footer.ejs') %>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/messages.js"></script>
+<script src="/js/notifications.js"></script>
 <script src="/js/chatListHandler.js"></script>
 </body>
 </html>

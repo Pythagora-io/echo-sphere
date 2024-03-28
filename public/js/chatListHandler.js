@@ -2,7 +2,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   fetchChats();
-  listenForNotifications();
 });
 
 function fetchChats() {
@@ -40,6 +39,32 @@ function selectChat(chatId) {
       if (data.success) {
         displayMessages(data.messages, chatId);
         document.getElementById('chatId').value = chatId; // Update the hidden input element 'chatId' with the selected chat's ID
+        // Remove the 'unread-message' class from the selected chat list item
+        const selectedListItem = document.querySelector(`[data-chat-id="${chatId}"]`);
+        if (selectedListItem) {
+          // Make an AJAX call to mark notifications as read before removing the 'unread-message' class
+          const username = selectedListItem.textContent.trim().split(', ')[0]; // Assuming the first name in the list item is the username
+          fetch('/notifications/markAllMessagesAsRead', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: username })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              console.log(`All messages from ${username} marked as read.`);
+              selectedListItem.classList.remove('unread-message');
+            } else {
+              console.error('Failed to mark messages as read');
+            }
+          })
+          .catch(error => {
+            console.error('Error marking messages as read:', error.message);
+            console.error(error.stack);
+          });
+        }
       } else {
         console.error('Failed to fetch messages for selected chat');
       }
@@ -64,28 +89,4 @@ function displayMessages(messages, chatId) {
   });
   console.log('Messages displayed for selected chat');
   messagesContainer.scrollTop = messagesContainer.scrollHeight; // Automatically scroll to the bottom of the messages container
-}
-
-function listenForNotifications() {
-  const socket = io();
-  socket.on('notification', (notification) => {
-    console.log('New notification received:', notification);
-    // Handle different types of notifications
-    switch (notification.type) {
-      case 'newMessage':
-        const chatListElement = document.getElementById('chatList');
-        const chatItems = chatListElement.querySelectorAll('li[data-chat-id]');
-        chatItems.forEach(item => {
-          if (item.getAttribute('data-chat-id') === notification.chatId) {
-            item.style.fontWeight = 'bold'; // Highlight chat with new message
-          }
-        });
-        break;
-      case 'newComment':
-        // Additional handling for new comment notifications can be implemented here
-        console.log('New comment notification received for post:', notification.postId);
-        break;
-      // Add more cases as needed for different notification types
-    }
-  });
 }

@@ -3,11 +3,11 @@ const Notification = require('../models/Notification');
 const { isAuthenticated } = require('./middleware/authMiddleware');
 const router = express.Router();
 
-// Route to fetch all notifications for the logged-in user
+// Route to fetch all notifications for the logged-in user, excluding 'newMessage' type
 router.get('/', isAuthenticated, async (req, res) => {
   try {
     const userId = req.session.userId;
-    const notifications = await Notification.find({ user: userId }).sort('-timestamp');
+    const notifications = await Notification.find({ user: userId, type: { $ne: 'newMessage' } }).sort('-timestamp');
     res.render('notifications', { notifications }); // Changed from res.json to res.render to display the notifications page
   } catch (error) {
     console.error('Error fetching notifications:', error.message, error.stack);
@@ -48,6 +48,20 @@ router.post('/markAllAsRead', isAuthenticated, async (req, res) => {
   } catch (error) {
     console.error('Error marking all notifications as read:', error.message, error.stack);
     res.status(500).json({ success: false, message: 'Failed to mark all notifications as read', error: error.message });
+  }
+});
+
+// Route to mark all 'newMessage' type notifications by the given username for the current user as read
+router.post('/markAllMessagesAsRead', isAuthenticated, async (req, res) => {
+  try {
+    const { username } = req.body;
+    const userId = req.session.userId;
+    const regex = new RegExp(`You have a new message from ${username}`);
+    await Notification.updateMany({ user: userId, type: 'newMessage', content: { $regex: regex } }, { isRead: true });
+    res.json({ success: true, message: `All messages from ${username} marked as read` });
+  } catch (error) {
+    console.error('Error marking all messages as read:', error.message, error.stack);
+    res.status(500).json({ success: false, message: 'Failed to mark all messages as read', error: error.message });
   }
 });
 

@@ -2,6 +2,8 @@ const Notification = require('../models/Notification');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment'); // Ensure Comment model is imported
 const User = require('../models/User');
+const Chat = require('../models/Chat'); // Ensure Chat model is imported
+const Message = require('../models/Message'); // Ensure Message model is imported
 
 async function createCommentNotification(commentId, io) { // Add io parameter to function signature
   try {
@@ -47,6 +49,45 @@ async function createCommentNotification(commentId, io) { // Add io parameter to
   }
 }
 
+async function createMessageNotification(messageId, chatId, io) {
+  try {
+    const message = await Message.findById(messageId).populate('sender');
+    const chat = await Chat.findOne({ chatId: chatId }).populate('participants');
+    if (!message || !chat) {
+      console.log(`Message with ID ${messageId} or Chat with UUID ${chatId} not found.`);
+      return;
+    }
+
+    chat.participants.forEach(async participant => {
+      if (participant._id.toString() !== message.sender._id.toString()) {
+        const notification = new Notification({
+          user: participant._id,
+          type: 'newMessage',
+          content: `You have a new message from ${message.sender.username}`,
+          isRead: false
+        });
+
+        await notification.save();
+
+        console.log(`Notification for new message created and saved for user ${participant.username}.`);
+
+        // Emit the notification to the participant's userId room
+        io.to(participant._id.toString()).emit('notification', {
+          type: 'newMessage',
+          content: notification.content,
+          timestamp: notification.timestamp
+        });
+
+        console.log(`Notification event emitted for new message to user ${participant.username}.`);
+      }
+    });
+  } catch (error) {
+    console.error('Error creating notification for new message:', error.message);
+    console.error(error.stack);
+  }
+}
+
 module.exports = {
-  createCommentNotification
+  createCommentNotification,
+  createMessageNotification
 };
