@@ -108,7 +108,7 @@ io.on('connection', (socket) => {
         chat: chat._id
       });
       newMessage.save().then(savedMessage => {
-        io.to(chatId).emit('receiveMessage', {senderId, message, chatId}); // Emitting to a room named after the chatId, including chatId in the emitted data
+        io.to(chatId).emit('receiveMessage', {chatId, senderId, message}); // Adjusted the sequence as per user feedback
         console.log(`Message saved and sent from ${senderId} to chat ${chatId}: ${message}`);
         // Use notificationHandler to create and emit notifications
         notificationHandler.createMessageNotification(savedMessage._id, chatId, io);

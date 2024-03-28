@@ -34,16 +34,21 @@ socket.on('connect', () => {
   console.log('Connected to WebSocket server.');
   // Join the user's own room for receiving personal notifications
   const userId = document.getElementById('userId').value;
-  socket.emit('joinRoom', userId);
-  console.log(`Joined room for user ${userId}`);
-});
-
-socket.on('notification', (notification) => {
-  console.log('New notification received:', notification);
-  // Update the UI to show the notification
-  // This could be updating a notifications list or showing a popup, depending on your application's design
-  // For demonstration, let's log the notification to the console
-  console.log(`Notification received: ${notification.content}`);
+  // Fetch chatIds and join each chat
+  fetch('/messages/chats/all') // Assuming there's an endpoint to fetch all chatIds for the user
+    .then(response => response.json())
+    .then(data => {
+      if (data.success && data.chats) {
+        data.chats.forEach(chat => {
+          socket.emit('joinChat', chat.chatId);
+          console.log(`Joined chat: ${chat.chatId}`);
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error joining chats:', error.message);
+      console.error(error.stack);
+    });
 });
 
 socket.on('disconnect', () => {
