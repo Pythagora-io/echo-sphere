@@ -14,6 +14,9 @@ const postSchema = new mongoose.Schema({
   }]
 }, { timestamps: true });
 
+// Adding text index for content field to enable text search
+postSchema.index({ content: 'text' });
+
 postSchema.pre('save', function(next) {
   console.log(`Saving post of type: ${this.type} by author ID: ${this.author}`);
   // Recalculate upvotes and downvotes based on votes array

@@ -13,6 +13,8 @@ const subSphereSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+subSphereSchema.index({ name: 'text', description: 'text' }); // Added text index for search functionality
+
 subSphereSchema.pre('save', function(next) {
   console.log(`Saving SubSphere: ${this.name}`);
   next();

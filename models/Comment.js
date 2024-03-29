@@ -13,6 +13,8 @@ const commentSchema = new mongoose.Schema({
   }]
 }, { timestamps: true });
 
+commentSchema.index({ content: 'text' });
+
 commentSchema.pre('save', function(next) {
   console.log(`Saving comment by author ID: ${this.author}`);
   // Recalculate upvotes and downvotes based on votes array
