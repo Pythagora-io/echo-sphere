@@ -3,6 +3,7 @@ const asyncHandler = require('express-async-handler');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const SubSphere = require('../models/SubSphere');
+const { getTrendingPosts, getRecommendations } = require('../utils/recommendations');
 const router = express.Router();
 const moment = require('moment');
 
@@ -78,6 +79,27 @@ router.get('/', asyncHandler(async (req, res) => {
   } catch (error) {
     console.error('Error fetching search results:', error.message, error.stack);
     res.status(500).json({ message: 'Failed to fetch search results', error: error.message });
+  }
+}));
+
+router.get('/trending', asyncHandler(async (req, res) => {
+  try {
+    const posts = await getTrendingPosts();
+    res.json({ success: true, posts }); // Changed to return JSON
+  } catch (error) {
+    console.error('Error fetching trending posts:', error.message, error.stack);
+    res.status(500).json({ message: 'Failed to fetch trending posts', error: error.message });
+  }
+}));
+
+router.get('/recommendations', asyncHandler(async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const subSpheres = await getRecommendations(userId);
+    res.json({ success: true, subSpheres }); // Changed to return JSON
+  } catch (error) {
+    console.error('Error fetching recommendations:', error.message, error.stack);
+    res.status(500).json({ message: 'Failed to fetch recommendations', error: error.message });
   }
 }));
 

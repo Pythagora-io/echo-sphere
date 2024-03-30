@@ -26,10 +26,9 @@
       </div>
     </div>
   </div>
-  <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
+  <div class="flex flex-col space-y-4">
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
+    <button id="trendingButton" class="text-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Trending</button>
+    <button id="recommendationsButton" class="text-center bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">Recommendations</button>
+  </div>
 </form>
-<script>
-  document.querySelector('form').addEventListener('submit', function(event) {
-    console.log('Search form submitted with term:', document.getElementById('searchTerm').value);
-  });
-</script>
