@@ -87,7 +87,8 @@ router.get('/subSphere/:subSphereId/posts', isAuthenticated, async (req, res) =>
     const posts = await Post.find({ subSphere: subSphereId }).populate('author');
     const subSphere = await SubSphere.findById(subSphereId);
     const isSubscribed = subSphere.subscribers.some(subscriber => subscriber.equals(req.session.userId));
-    res.render('subSpherePosts', { posts, subSphere, isSubscribed });
+    const isModerator = subSphere.moderators.includes(req.session.userId); // Check if the user is a moderator
+    res.render('subSpherePosts', { posts, subSphere, isSubscribed, isModerator }); // Pass isModerator to the template
   } catch (error) {
     console.error('Error fetching posts for SubSphere:', error);
     console.error(error.stack);
