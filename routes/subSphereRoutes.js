@@ -121,4 +121,22 @@ router.post('/unsubscribeFromSubSphere', isAuthenticated, async (req, res) => {
   }
 });
 
+// New endpoint to get SubSphere details excluding subscribers
+router.get('/subSphere/:subSphereId/details', isAuthenticated, async (req, res) => {
+  try {
+    const subSphereId = req.params.subSphereId;
+    const subSphereDetails = await SubSphere.findById(subSphereId).select('-subscribers');
+    if (!subSphereDetails) {
+      console.log(`SubSphere with ID ${subSphereId} not found.`);
+      return res.status(404).send('SubSphere not found');
+    }
+    console.log(`SubSphere details for ${subSphereId} fetched successfully.`);
+    res.json(subSphereDetails);
+  } catch (error) {
+    console.error('Error fetching SubSphere details:', error);
+    console.error(error.stack);
+    res.status(500).send('Failed to fetch SubSphere details');
+  }
+});
+
 module.exports = router;

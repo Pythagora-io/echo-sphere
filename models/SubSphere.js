@@ -9,8 +9,12 @@ const subSphereSchema = new mongoose.Schema({
   settings: {
     allowImages: { type: Boolean, default: true },
     allowVideos: { type: Boolean, default: true },
-    allowTextPosts: { type: Boolean, default: true }
-  }
+    allowTextPosts: { type: Boolean, default: true },
+    minKarmaToPost: { type: Number, default: 0 } // Added for automod configuration based on user karma
+  },
+  lockedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+  stickyPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+  bannedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] // Added bannedUsers list
 }, { timestamps: true });
 
 subSphereSchema.index({ name: 'text', description: 'text' }); // Added text index for search functionality

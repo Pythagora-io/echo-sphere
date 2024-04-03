@@ -14,6 +14,7 @@ const userRoutes = require('./routes/userRoutes'); // Added user routes
 const messageRoutes = require('./routes/messageRoutes'); // Added message routes
 const notificationRoutes = require('./routes/notificationRoutes'); // Added notification routes
 const searchRoutes = require('./routes/searchRoutes'); // Added search routes
+const moderationRoutes = require('./routes/moderationRoutes'); // Added moderation routes
 const multer = require('multer'); // For handling multipart/form-data
 const path = require('path');
 const fs = require('fs');
@@ -175,6 +176,9 @@ app.use('/notifications', notificationRoutes); // Use the notification routes
 
 // Search Routes
 app.use('/search', searchRoutes); // Use the search routes
+
+// Moderation Routes
+app.use('/moderation', moderationRoutes); // Use the moderation routes
 
 // Root path response
 app.get("/", (req, res) => {

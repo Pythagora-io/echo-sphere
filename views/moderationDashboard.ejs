@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Moderation Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-gray-100">
+<%- include('partials/_header.ejs') %>
+<main role="main" class="container mx-auto mt-4">
+  <% if (moderatedSubSpheres.length > 0) { %>
+    <h1 class="text-4xl font-bold">Moderation Dashboard</h1>
+    <div class="mt-6">
+      <label for="subSphereSelect" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Select SubSphere:</label>
+      <select id="subSphereSelect" name="subSphereSelect" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" onchange="fetchSubSphereDetails(this.value)">
+        <% moderatedSubSpheres.forEach(function(subSphere) { %>
+          <option value="<%= subSphere._id %>"><%= subSphere.name %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="mt-6">
+      <canvas id="moderationChart"></canvas>
+    </div>
+    <div class="mt-6">
+      <h2 class="text-2xl font-bold mb-4">Moderation Logs</h2>
+      <div id="moderationLogsList" class="max-h-96 overflow-y-auto">
+        <% if (moderationLogs.length > 0) { %>
+          <% moderationLogs.forEach(function(log) { %>
+            <div class="bg-white shadow-lg overflow-hidden sm:rounded-lg mb-4 p-4 border border-gray-200">
+              <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Moderation Log</h3>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">Details about the moderation action.</p>
+              </div>
+              <div class="border-t border-gray-200">
+                <dl>
+                  <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Timestamp</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= log.timestamp %></dd>
+                  </div>
+                  <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Target</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= log.target %></dd>
+                  </div>
+                  <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Action</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= log.action %></dd>
+                  </div>
+                  <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Target ID</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= log.targetId %></dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <div class="text-center py-5">
+            <p class="text-sm text-gray-500">No moderation logs found. Your SubSphere is running smoothly!</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+    <!-- Moderation actions UI -->
+    <div class="mt-6">
+      <h2 class="text-2xl font-bold mb-4">Moderation Actions</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-blue-100 p-4 rounded-lg">
+          <h3 class="text-xl font-semibold mb-2">User Actions</h3>
+          <!-- Ban User Form -->
+          <div id="banUserForm" class="mb-4">
+            <input type="text" id="banUserId" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200" placeholder="Enter user ID" />
+            <button id="banUserButton" class="w-full mt-2 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">Ban User</button>
+            <div id="banUserError" class="mt-2 text-sm text-red-500 hidden"></div>
+          </div>
+          <!-- Unban User Form -->
+          <div id="unbanUserForm" class="mb-4">
+            <input type="text" id="unbanUserId" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200" placeholder="Enter user ID" />
+            <button id="unbanUserButton" class="w-full mt-2 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">Unban User</button>
+            <div id="unbanUserError" class="mt-2 text-sm text-red-500 hidden"></div>
+          </div>
+        </div>
+        <div class="bg-green-100 p-4 rounded-lg">
+          <h3 class="text-xl font-semibold mb-2">Post Actions</h3>
+          <!-- Sticky Post Form -->
+          <div id="stickyPostForm" class="mb-4">
+            <input type="text" id="stickyPostId" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200" placeholder="Enter post ID" />
+            <button id="stickyPostButton" class="w-full mt-2 py-2 px-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75">Sticky Post</button>
+            <div id="stickyPostError" class="mt-2 text-sm text-red-500 hidden"></div>
+          </div>
+          <!-- Unsticky Post Form -->
+          <div id="unstickyPostForm" class="mb-4">
+            <input type="text" id="unstickyPostId" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200" placeholder="Enter post ID" />
+            <button id="unstickyPostButton" class="w-full mt-2 py-2 px-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75">Unsticky Post</button>
+            <div id="unstickyPostError" class="mt-2 text-sm text-red-500 hidden"></div>
+          </div>
+          <!-- Lock Post Form -->
+          <div id="lockPostForm" class="mb-4">
+            <input type="text" id="lockPostId" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200" placeholder="Enter post ID" />
+            <button id="lockPostButton" class="w-full mt-2 py-2 px-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75">Lock Post</button>
+            <div id="lockPostError" class="mt-2 text-sm text-red-500 hidden"></div>
+          </div>
+          <!-- Unlock Post Form -->
+          <div id="unlockPostForm" class="mb-4">
+            <input type="text" id="unlockPostId" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-200" placeholder="Enter post ID" />
+            <button id="unlockPostButton" class="w-full mt-2 py-2 px-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75">Unlock Post</button>
+            <div id="unlockPostError" class="mt-2 text-sm text-red-500 hidden"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Automod Configuration UI -->
+    <div class="mt-6">
+      <h2 class="text-2xl font-bold mb-4">Automod Configuration</h2>
+      <form id="automodConfigForm" class="bg-gray-100 p-4 rounded-lg">
+        <div class="mb-4">
+          <label for="minKarmaToPost" class="block text-sm font-medium text-gray-700">Minimum Karma to Post</label>
+          <input type="number" id="minKarmaToPost" name="minKarmaToPost" class="mt-1 block w-full p-2.5 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Enter minimum karma required to post">
+        </div>
+        <div class="mb-4">
+          <label class="inline-flex items-center">
+            <input type="checkbox" id="allowImages" name="allowImages" class="form-checkbox h-5 w-5 text-blue-600"><span class="ml-2 text-gray-700">Allow Images</span>
+          </label>
+        </div>
+        <div class="mb-4">
+          <label class="inline-flex items-center">
+            <input type="checkbox" id="allowVideos" name="allowVideos" class="form-checkbox h-5 w-5 text-blue-600"><span class="ml-2 text-gray-700">Allow Videos</span>
+          </label>
+        </div>
+        <div class="mb-4">
+          <label class="inline-flex items-center">
+            <input type="checkbox" id="allowTextPosts" name="allowTextPosts" class="form-checkbox h-5 w-5 text-blue-600"><span class="ml-2 text-gray-700">Allow Text Posts</span>
+          </label>
+        </div>
+        <button type="submit" class="w-full mt-2 py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">Update Settings</button>
+      </form>
+    </div>
+  <% } else { %>
+    <h1 class="text-4xl font-bold">Moderation Dashboard</h1>
+    <p class="mt-6">You are not moderating any SubSpheres yet. Explore and join SubSpheres to start moderating!</p>
+  <% } %>
+</main>
+<%- include('partials/_footer.ejs') %>
+<script src="/js/moderationDashboard.js"></script>
+<script src="/js/moderationActions.js"></script>
+<script src="/js/updateSubSphereSettings.js"></script>
+<script src="/js/fetchSubSphereDetails.js"></script>
+</body>
+</html>
