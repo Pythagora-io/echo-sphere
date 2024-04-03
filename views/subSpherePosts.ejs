@@ -14,6 +14,42 @@
     <% if(isModerator) { %>
       <a href="/moderation" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">Moderation</a>
     <% } %>
+    <% if(stickyPosts.length > 0) { %>
+      <% stickyPosts.forEach(function(post) { %>
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 cursor-pointer" onclick="location.href='/posts/<%= post._id %>'">
+          <span class="inline-block bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full mr-2">Sticky</span>
+          <% if (post.type === 'image') { %>
+            <img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto">
+          <% } else if (post.type === 'video') { %>
+            <video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video>
+          <% } else if (post.type === 'link') { %>
+            <a href="<%= post.content %>" target="_blank" rel="noopener noreferrer" class="text-xl font-bold mb-2"><%= post.content %></a>
+          <% } else { %>
+            <p class="text-xl font-bold mb-2"><%= post.content %></p>
+          <% } %>
+          <div class="mt-4 text-sm text-gray-600 italic">Posted by <a href="/users/<%= post.author._id %>" class="underline"><%= post.author.username %></a> on <%= post.createdAt.toDateString() %></div>
+          <!-- Check if post is locked -->
+          <% if (post.isLocked) { %>
+            <div class="mt-4 text-center py-2 px-4 bg-gray-200 rounded">
+              <p class="text-sm text-gray-600">This post is locked. Voting is disabled.</p>
+            </div>
+          <% } else { %>
+            <div class="flex space-x-4 mt-4">
+              <button id="post-upvote-<%= post._id %>" onclick="event.stopPropagation(); upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
+              <button id="post-downvote-<%= post._id %>" onclick="event.stopPropagation(); downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
+              <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span> votes
+            </div>
+          <% } %>
+          <div class="mt-4">
+            <% if (post.flares) { %>
+              <% post.flares.forEach(function(flare) { %>
+                <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-2"><%= flare %></span>
+              <% }); %>
+            <% } %>
+          </div>
+        </div>
+      <% }); %>
+    <% } %>
     <% if(posts.length > 0) { %>
       <% posts.forEach(function(post) { %>
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 cursor-pointer" onclick="location.href='/posts/<%= post._id %>'">
@@ -27,11 +63,18 @@
             <p class="text-xl font-bold mb-2"><%= post.content %></p>
           <% } %>
           <div class="mt-4 text-sm text-gray-600 italic">Posted by <a href="/users/<%= post.author._id %>" class="underline"><%= post.author.username %></a> on <%= post.createdAt.toDateString() %></div>
-          <div class="flex space-x-4 mt-4">
-            <button id="post-upvote-<%= post._id %>" onclick="event.stopPropagation(); upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
-            <button id="post-downvote-<%= post._id %>" onclick="event.stopPropagation(); downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
-            <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span> votes
-          </div>
+          <!-- Check if post is locked -->
+          <% if (post.isLocked) { %>
+            <div class="mt-4 text-center py-2 px-4 bg-gray-200 rounded">
+              <p class="text-sm text-gray-600">This post is locked. Voting is disabled.</p>
+            </div>
+          <% } else { %>
+            <div class="flex space-x-4 mt-4">
+              <button id="post-upvote-<%= post._id %>" onclick="event.stopPropagation(); upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
+              <button id="post-downvote-<%= post._id %>" onclick="event.stopPropagation(); downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
+              <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span> votes
+            </div>
+          <% } %>
           <div class="mt-4">
             <% if (post.flares) { %>
               <% post.flares.forEach(function(flare) { %>

@@ -5,11 +5,11 @@ const Post = require('../models/Post');
 const User = require('../models/User');
 const router = express.Router();
 
-router.get('/createSubSphere', isAuthenticated, (req, res) => {
+router.get('/createSubSphere', isAuthenticated, ( req, res ) => {
   res.render('createSubSphere');
 });
 
-router.post('/createSubSphere', isAuthenticated, async (req, res) => {
+router.post('/createSubSphere', isAuthenticated, async ( req, res ) => {
   try {
     const { name, description, flares, settings } = req.body;
     const newSubSphere = new SubSphere({
@@ -30,22 +30,22 @@ router.post('/createSubSphere', isAuthenticated, async (req, res) => {
   }
 });
 
-router.get('/editSubSphere/:id', isAuthenticated, async (req, res) => {
+router.get('/editSubSphere/:id', isAuthenticated, async ( req, res ) => {
   try {
     const subSphere = await SubSphere.findById(req.params.id);
     if (!subSphere.moderators.includes(req.session.userId)) {
       console.log('Unauthorized attempt to edit SubSphere.');
       return res.status(403).send('Unauthorized');
-    }
+  }
     res.render('editSubSphere', { subSphere });
   } catch (error) {
     console.error('Error fetching SubSphere for editing:', error);
     console.error(error.stack);
-    res.status(500).send('Failed to fetch SubSphere details');
+    res.status(500).send('Failed to get SubSphere details');
   }
 });
 
-router.post('/editSubSphere/:id', isAuthenticated, async (req, res) => {
+router.post('/editSubSphere/:id', isAuthenticated, async ( req, res ) => {
   try {
     const { name, description, flares, settings } = req.body;
     const subSphere = await SubSphere.findById(req.params.id);
@@ -84,15 +84,25 @@ router.get('/subSpheresList', isAuthenticated, async (req, res) => {
 router.get('/subSphere/:subSphereId/posts', isAuthenticated, async (req, res) => {
   try {
     const subSphereId = req.params.subSphereId;
-    const posts = await Post.find({ subSphere: subSphereId }).populate('author');
-    const subSphere = await SubSphere.findById(subSphereId);
+    const subSphere = await SubSphere.findById(subSphereId).populate('stickyPosts');
+    if (subSphere.bannedUsers.includes(req.session.userId)) {
+      return res.render('exploreSubSpheres', { message: 'You have been banned from this SubSphere. Please try another one.' });
+    }
+    const stickyPosts = await Post.find({ _id: { $in: subSphere.stickyPosts } }).populate('author');
+    const posts = await Post.find({ subSphere: subSphereId, _id: { $nin: subSphere.stickyPosts.map(post => post._id) } }).populate('author');
     const isSubscribed = subSphere.subscribers.some(subscriber => subscriber.equals(req.session.userId));
-    const isModerator = subSphere.moderators.includes(req.session.userId); // Check if the user is a moderator
-    res.render('subSpherePosts', { posts, subSphere, isSubscribed, isModerator }); // Pass isModerator to the template
+    const isModerator = subSphere.moderators.includes(req.session.userId);
+
+    // Mark posts as locked if they are in the lockedPosts array
+    posts.forEach(post => {
+      post.isLocked = subSphere.lockedPosts.some(lockedPostId => lockedPostId.equals(post._id));
+    });
+
+    res.render('subSpherePosts', { posts, stickyPosts, subSphere, isSubscribed, isModerator });
   } catch (error) {
     console.error('Error fetching posts for SubSphere:', error);
     console.error(error.stack);
-    res.status(500).send('Failed to fetch posts for SubSphere');
+    res.status(500).send(' Failed to fetch posts for SubSphere');
   }
 });
 
