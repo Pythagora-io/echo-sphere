@@ -166,12 +166,7 @@ function unsubscribeFromSubSphere(subSphereId) {
   });
 }
 
-$(document).ready(function() {
-  $('.subSphere-select').select2({
-    placeholder: "Select a SubSphere",
-    allowClear: true
-  });
-
+document.addEventListener('DOMContentLoaded', function() {
   // Event listeners for subscribe and unsubscribe buttons
   document.querySelectorAll('.subscribe-btn').forEach(button => {
     button.addEventListener('click', function() {

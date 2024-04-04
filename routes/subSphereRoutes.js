@@ -132,21 +132,25 @@ router.post('/unsubscribeFromSubSphere', isAuthenticated, async (req, res) => {
   }
 });
 
-// New endpoint to get SubSphere details excluding subscribers
 router.get('/subSphere/:subSphereId/details', isAuthenticated, async (req, res) => {
   try {
     const subSphereId = req.params.subSphereId;
-    const subSphereDetails = await SubSphere.findById(subSphereId).select('-subscribers');
-    if (!subSphereDetails) {
+    const subSphere = await SubSphere.findById(subSphereId, '-subscribers'); // Exclude 'subscribers' from the fetched data for safety
+    if (!subSphere) {
       console.log(`SubSphere with ID ${subSphereId} not found.`);
       return res.status(404).send('SubSphere not found');
     }
-    console.log(`SubSphere details for ${subSphereId} fetched successfully.`);
-    res.json(subSphereDetails);
+    const settings = {
+      allowImages: subSphere.settings.allowImages,
+      allowVideos: subSphere.settings.allowVideos,
+      allowTextPosts: subSphere.settings.allowTextPosts
+    };
+    console.log(`SubSphere settings for ${subSphereId} fetched successfully.`);
+    res.json(settings);
   } catch (error) {
-    console.error('Error fetching SubSphere details:', error);
+    console.error('Error fetching SubSphere settings:', error);
     console.error(error.stack);
-    res.status(500).send('Failed to fetch SubSphere details');
+    res.status(500).send('Failed to fetch SubSphere settings');
   }
 });
 

@@ -11,15 +11,11 @@
       <div class="mb-4">
         <label for="type" class="block text-gray-700 text-sm font-bold mb-2">Post Type</label>
         <select name="type" id="postType" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-          <option value="text">Text</option>
-          <option value="link">Link</option>
-          <option value="image">Image</option>
-          <option value="video">Video</option>
+          <!-- Options will be dynamically added based on the selected SubSphere's settings -->
         </select>
       </div>
       <div class="mb-4" id="contentField">
-        <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
-        <textarea name="content" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+        <!-- Content field will be dynamically updated based on the selected post type -->
       </div>
       <div class="mb-4">
         <label for="flairs" class="block text-gray-700 text-sm font-bold mb-2">Flairs (comma-separated)</label>
@@ -27,7 +23,7 @@
       </div>
       <div class="mb-4">
         <label for="subSphere" class="block text-gray-700 text-sm font-bold mb-2">SubSphere</label>
-        <select name="subSphere" class="subSphere-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <select name="subSphere" id="subSphereSelect" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
           <% subSpheres.forEach(function(subSphere) { %>
             <option value="<%= subSphere._id %>"><%= subSphere.name %></option>
           <% }); %>
@@ -44,26 +40,6 @@
 </main>
 <%- include('../partials/_footer.ejs') %>
 <script src="/js/main.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-<script>
-  document.getElementById('postType').addEventListener('change', function() {
-    const selectedType = this.value;
-    const contentField = document.getElementById('contentField');
-    contentField.innerHTML = '';
-    if (selectedType === 'text') {
-      contentField.innerHTML = '<label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content</label><textarea name="content" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>';
-    } else if (selectedType === 'link') {
-      contentField.innerHTML = '<label for="content" class="block text-gray-700 text-sm font-bold mb-2">Link</label><input type="url" name="content" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">';
-    } else if (selectedType === 'image' || selectedType === 'video') {
-      contentField.innerHTML = '<label for="content" class="block text-gray-700 text-sm font-bold mb-2">' + (selectedType === 'image' ? 'Image' : 'Video') + '</label><input type="file" name="content" accept="' + (selectedType === 'image' ? 'image/*' : 'video/*') + '" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">';
-    }
-  });
-  $(document).ready(function() {
-    $('.subSphere-select').select2({
-      placeholder: "Select a SubSphere",
-      allowClear: true
-    });
-  });
-</script>
+<script src="/js/createPostFormHandler.js"></script>
 </body>
 </html>
