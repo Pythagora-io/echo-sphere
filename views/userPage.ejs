@@ -7,19 +7,22 @@
   <div class="max-w-4xl mx-auto px-4">
     <h2 class="text-2xl font-bold mb-6">User Page</h2>
     <% if (user._id.toString() !== session.userId.toString()) { %>
-      <% if (user.followers.includes(session.userId)) { %>
-        <form action="/unfollow/<%= user._id %>" method="POST">
-          <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-4">Unfollow</button>
-        </form>
-      <% } else { %>
-        <form action="/follow/<%= user._id %>" method="POST">
-          <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4">Follow</button>
-        </form>
-      <% } %>
-      <a href="/messages?recipientId=<%= user._id %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">Message</a>
+      <div class="flex space-x-4 my-4">
+        <% if (user.followers.includes(session.userId)) { %>
+          <form action="/unfollow/<%= user._id %>" method="POST">
+            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Unfollow</button>
+          </form>
+        <% } else { %>
+          <form action="/follow/<%= user._id %>" method="POST">
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Follow</button>
+          </form>
+        <% } %>
+        <a href="/messages?recipientId=<%= user._id %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Message</a>
+      </div>
     <% } %>
     <% if (user._id.toString() === session.userId.toString()) { %>
       <p>Your Karma: <%= karma %></p>
+      <p>Followers: <%= user.followers.length %></p>
     <% } %>
     <div class="tabs flex justify-start gap-4 mb-4">
       <button class="tab-button bg-gradient-to-r from-blue-500 to-teal-500 hover:from-teal-500 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg" onclick="openTab(event, 'Posts')">Posts</button>
