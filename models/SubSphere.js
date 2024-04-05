@@ -5,7 +5,7 @@ const subSphereSchema = new mongoose.Schema({
   description: { type: String, required: true },
   moderators: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   subscribers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Added subscribers list
-  flares: [{ type: String }],
+  flairs: [{ type: String }],
   settings: {
     allowImages: { type: Boolean, default: true },
     allowVideos: { type: Boolean, default: true },

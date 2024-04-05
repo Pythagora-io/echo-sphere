@@ -11,12 +11,12 @@ router.get('/createSubSphere', isAuthenticated, ( req, res ) => {
 
 router.post('/createSubSphere', isAuthenticated, async ( req, res ) => {
   try {
-    const { name, description, flares, settings } = req.body;
+    const { name, description, flairs, settings } = req.body;
     const newSubSphere = new SubSphere({
       name,
       description,
       moderators: [req.session.userId], // The creator becomes the first moderator
-      flares: flares.split(','), // Assuming flares are submitted as comma-separated values
+      flairs: flairs.split(','), // Assuming flairs are submitted as comma-separated values
       settings,
       subscribers: [] // Initialize an empty subscribers list
     });
@@ -47,7 +47,7 @@ router.get('/editSubSphere/:id', isAuthenticated, async ( req, res ) => {
 
 router.post('/editSubSphere/:id', isAuthenticated, async ( req, res ) => {
   try {
-    const { name, description, flares, settings } = req.body;
+    const { name, description, flairs, settings } = req.body;
     const subSphere = await SubSphere.findById(req.params.id);
     if (!subSphere.moderators.includes(req.session.userId)) {
       console.log('Unauthorized attempt to update SubSphere.');
@@ -56,7 +56,7 @@ router.post('/editSubSphere/:id', isAuthenticated, async ( req, res ) => {
     await SubSphere.findByIdAndUpdate(req.params.id, {
       name,
       description,
-      flares: flares.split(','),
+      flairs: flairs.split(','),
       settings
     });
     console.log(`SubSphere ${name} updated successfully.`);

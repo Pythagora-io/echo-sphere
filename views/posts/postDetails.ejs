@@ -20,6 +20,11 @@
       <% } else { %>
         <p><%= post.content %></p>
       <% } %>
+      <div class="mt-4">
+        <% post.flairs.forEach(function(flair) { %>
+          <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full"><%= flair %></span>
+        <% }); %>
+      </div>
       <p class="mt-4 bg-gray-100 p-2 rounded text-sm text-gray-600">Posted by <a href="/users/<%= post.author._id %>" class="underline"><%= post.author.username %></a> on <%= post.createdAt.toDateString() %></p>
       <% if (!isLocked) { %>
         <div class="mt-4">

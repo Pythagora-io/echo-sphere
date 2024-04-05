@@ -9,8 +9,8 @@
     <div class="mb-6">
       <p class="text-lg text-gray-700 mb-4"><%= subSphere.description %></p>
       <div>
-        <% subSphere.flares.forEach(function(flare) { %>
-          <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full"><%= flare %></span>
+        <% subSphere.flairs.forEach(function(flair) { %>
+          <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full"><%= flair %></span>
         <% }); %>
       </div>
     </div>
@@ -35,6 +35,15 @@
           <% } else { %>
             <p class="text-xl font-bold mb-2"><%= post.content %></p>
           <% } %>
+          <div class="mt-4">
+            <% if (post.flairs && post.flairs.length > 0) { %>
+              <div class="flex flex-wrap">
+                <% post.flairs.forEach(function(flair) { %>
+                  <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 mb-2 px-3 py-1 rounded-full"><%= flair %></span>
+                <% }); %>
+              </div>
+            <% } %>
+          </div>
           <div class="mt-4 text-sm text-gray-600 italic">Posted by <a href="/users/<%= post.author._id %>" class="underline"><%= post.author.username %></a> on <%= post.createdAt.toDateString() %></div>
           <!-- Check if post is locked -->
           <% if (post.isLocked) { %>
@@ -48,13 +57,6 @@
               <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span> votes
             </div>
           <% } %>
-          <div class="mt-4">
-            <% if (post.flares) { %>
-              <% post.flares.forEach(function(flare) { %>
-                <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-2"><%= flare %></span>
-              <% }); %>
-            <% } %>
-          </div>
         </div>
       <% }); %>
     <% } %>
@@ -70,6 +72,15 @@
           <% } else { %>
             <p class="text-xl font-bold mb-2"><%= post.content %></p>
           <% } %>
+          <div class="mt-4">
+            <% if (post.flairs && post.flairs.length > 0) { %>
+              <div class="flex flex-wrap">
+                <% post.flairs.forEach(function(flair) { %>
+                  <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 mb-2 px-3 py-1 rounded-full"><%= flair %></span>
+                <% }); %>
+              </div>
+            <% } %>
+          </div>
           <div class="mt-4 text-sm text-gray-600 italic">Posted by <a href="/users/<%= post.author._id %>" class="underline"><%= post.author.username %></a> on <%= post.createdAt.toDateString() %></div>
           <!-- Check if post is locked -->
           <% if (post.isLocked) { %>
@@ -83,13 +94,6 @@
               <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span> votes
             </div>
           <% } %>
-          <div class="mt-4">
-            <% if (post.flares) { %>
-              <% post.flares.forEach(function(flare) { %>
-                <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-2"><%= flare %></span>
-              <% }); %>
-            <% } %>
-          </div>
         </div>
       <% }); %>
     <% } else { %>

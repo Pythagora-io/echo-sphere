@@ -70,11 +70,15 @@ router.post('/createPost', isAuthenticated, upload.single('content'), async (req
       postContent = `/uploads/posts/${req.file.filename}`;
     }
 
+    // Splitting flairs by comma and trimming each flair
+    const flairs = req.body.flairs ? req.body.flairs.split(',').map(flair => flair.trim()) : [];
+
     const newPost = await Post.create({
       ...req.body,
       content: postContent,
       author: req.session.userId,
-      subSphere: req.body.subSphere
+      subSphere: req.body.subSphere,
+      flairs: flairs
     });
 
     console.log(`New post created with ID: ${newPost._id}`);
