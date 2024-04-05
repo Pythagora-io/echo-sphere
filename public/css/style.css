@@ -61,3 +61,18 @@
 .unread-message {
   @apply bg-red-100 border-l-4 border-red-500;
 }
+
+/* Custom style for post titles */
+.post-title {
+  @apply text-2xl font-bold text-gray-800 mb-2;
+}
+
+/* Custom style for SubSphere and post flairs */
+.flair {
+  @apply inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full;
+}
+
+/* Custom style for post content margin */
+.post-content {
+  @apply mt-2;
+}

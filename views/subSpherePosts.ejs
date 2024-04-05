@@ -26,24 +26,21 @@
       <% stickyPosts.forEach(function(post) { %>
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 cursor-pointer" onclick="location.href='/posts/<%= post._id %>'">
           <span class="inline-block bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full mr-2">Sticky</span>
+          <h3 class="text-xl font-bold mb-2"><%= post.title %></h3>
+          <div class="mt-2 mb-2">
+            <% post.flairs.forEach(function(flair) { %>
+              <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full"><%= flair %></span>
+            <% }); %>
+          </div>
           <% if (post.type === 'image') { %>
             <img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto">
           <% } else if (post.type === 'video') { %>
             <video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video>
           <% } else if (post.type === 'link') { %>
-            <a href="<%= post.content %>" target="_blank" rel="noopener noreferrer" class="text-xl font-bold mb-2"><%= post.content %></a>
+            <a href="<%= post.content %>" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700"><%= post.content %></a>
           <% } else { %>
-            <p class="text-xl font-bold mb-2"><%= post.content %></p>
+            <p><%= post.content %></p>
           <% } %>
-          <div class="mt-4">
-            <% if (post.flairs && post.flairs.length > 0) { %>
-              <div class="flex flex-wrap">
-                <% post.flairs.forEach(function(flair) { %>
-                  <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 mb-2 px-3 py-1 rounded-full"><%= flair %></span>
-                <% }); %>
-              </div>
-            <% } %>
-          </div>
           <div class="mt-4 text-sm text-gray-600 italic">Posted by <a href="/users/<%= post.author._id %>" class="underline"><%= post.author.username %></a> on <%= post.createdAt.toDateString() %></div>
           <!-- Check if post is locked -->
           <% if (post.isLocked) { %>
@@ -63,24 +60,21 @@
     <% if(posts.length > 0) { %>
       <% posts.forEach(function(post) { %>
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 cursor-pointer" onclick="location.href='/posts/<%= post._id %>'">
+          <h3 class="text-xl font-bold mb-2"><%= post.title %></h3>
+          <div class="mt-2 mb-2">
+            <% post.flairs.forEach(function(flair) { %>
+              <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full"><%= flair %></span>
+            <% }); %>
+          </div>
           <% if (post.type === 'image') { %>
             <img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto">
           <% } else if (post.type === 'video') { %>
             <video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video>
           <% } else if (post.type === 'link') { %>
-            <a href="<%= post.content %>" target="_blank" rel="noopener noreferrer" class="text-xl font-bold mb-2"><%= post.content %></a>
+            <a href="<%= post.content %>" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700"><%= post.content %></a>
           <% } else { %>
-            <p class="text-xl font-bold mb-2"><%= post.content %></p>
+            <p><%= post.content %></p>
           <% } %>
-          <div class="mt-4">
-            <% if (post.flairs && post.flairs.length > 0) { %>
-              <div class="flex flex-wrap">
-                <% post.flairs.forEach(function(flair) { %>
-                  <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 mb-2 px-3 py-1 rounded-full"><%= flair %></span>
-                <% }); %>
-              </div>
-            <% } %>
-          </div>
           <div class="mt-4 text-sm text-gray-600 italic">Posted by <a href="/users/<%= post.author._id %>" class="underline"><%= post.author.username %></a> on <%= post.createdAt.toDateString() %></div>
           <!-- Check if post is locked -->
           <% if (post.isLocked) { %>

@@ -36,7 +36,7 @@
             <a href="/posts/<%= post._id %>" class="block">
               <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex justify-between items-center">
                 <div>
-                  <p class="text-blue-500 hover:text-blue-700 font-bold"><%= post.content %></p>
+                  <h3 class="text-xl font-bold text-blue-500 hover:text-blue-700"><%= post.title %></h3>
                   <p class="text-sm text-gray-500">By <%= post.author.username %> on <%= new Date(post.createdAt).toLocaleString() %></p>
                   <p>Total Votes: <%= post.upvotes - post.downvotes %></p>
                 </div>

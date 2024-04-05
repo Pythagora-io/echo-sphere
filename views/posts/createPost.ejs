@@ -9,6 +9,10 @@
     <% if (subSpheres && subSpheres.length > 0) { %>
     <form action="/createPost" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" enctype="multipart/form-data">
       <div class="mb-4">
+        <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Title</label>
+        <input type="text" name="title" placeholder="Title" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      </div>
+      <div class="mb-4">
         <label for="type" class="block text-gray-700 text-sm font-bold mb-2">Post Type</label>
         <select name="type" id="postType" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
           <!-- Options will be dynamically added based on the selected SubSphere's settings -->

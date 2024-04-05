@@ -74,6 +74,7 @@ router.post('/createPost', isAuthenticated, upload.single('content'), async (req
     const flairs = req.body.flairs ? req.body.flairs.split(',').map(flair => flair.trim()) : [];
 
     const newPost = await Post.create({
+      title: req.body.title, // Capture the title from the request body
       ...req.body,
       content: postContent,
       author: req.session.userId,

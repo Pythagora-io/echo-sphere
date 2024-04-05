@@ -27,47 +27,39 @@
     </div>
     <div id="Posts" class="tab-content">
       <% posts.forEach(function(post) { %>
-        <% if (post.type === 'link') { %>
+        <a href="/posts/<%= post._id %>" class="block">
           <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <a href="/subSphere/<%= post.subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700 font-bold"><%= post.subSphere.name %></a>
-            <a href="<%= post.content %>" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700"><%= post.content %></a>
-            <p class="text-sm text-gray-500">Created on <%= new Date(post.createdAt).toLocaleString() %></p>
+            <h3 class="text-xl font-bold mb-2"><%= post.title %></h3>
+            <div class="my-2">
+              <% post.flairs.forEach(function(flair) { %>
+                <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full"><%= flair %></span>
+              <% }); %>
+            </div>
+            <% if (post.type === 'image') { %>
+              <img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto">
+            <% } else if (post.type === 'video') { %>
+              <video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video>
+            <% } else { %>
+              <p><%= post.content %></p>
+            <% } %>
+            <p class="text-sm text-gray-500 mt-2 mb-2">Created on <%= new Date(post.createdAt).toLocaleString() %></p>
             <p>Total Votes: <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span></p>
             <button id="post-upvote-<%= post._id %>" onclick="upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
             <button id="post-downvote-<%= post._id %>" onclick="downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
           </div>
-        <% } else { %>
-          <a href="/posts/<%= post._id %>" class="block">
-            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-              <a href="/subSphere/<%= post.subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700 font-bold"><%= post.subSphere.name %></a>
-              <% if (post.type === 'image') { %>
-                <img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto">
-              <% } else if (post.type === 'video') { %>
-                <video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video>
-              <% } else { %>
-                <p><%= post.content %></p>
-              <% } %>
-              <p class="text-sm text-gray-500">Created on <%= new Date(post.createdAt).toLocaleString() %></p>
-              <p>Total Votes: <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span></p>
-              <button id="post-upvote-<%= post._id %>" onclick="upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
-              <button id="post-downvote-<%= post._id %>" onclick="downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
-            </div>
-          </a>
-        <% } %>
+        </a>
       <% }); %>
     </div>
     <div id="Comments" class="tab-content" style="display:none">
       <% comments.forEach(function(comment) { %>
-        <a href="/posts/<%= comment.post._id %>#comment-<%= comment._id %>" class="block">
-          <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" id="comment-<%= comment._id %>">
-            <a href="/subSphere/<%= comment.post.subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700 font-bold"><%= comment.post.subSphere.name %></a>
-            <p class="text-gray-700 text-base mb-4"><%= comment.content %></p>
-            <p class="text-sm text-gray-500">Created on <%= new Date(comment.createdAt).toLocaleString() %></p>
-            <p>Total Votes: <span id="comment-<%= comment._id %>-votes"><%= comment.upvotes - comment.downvotes %></span></p>
-            <button onclick="upvoteComment('<%= comment._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
-            <button onclick="downvoteComment('<%= comment._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
-          </div>
-        </a>
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" id="comment-<%= comment._id %>">
+          <h3 class="text-xl font-bold mb-2"><%= comment.post.title %></h3>
+          <p class="text-gray-700 text-base mb-4"><%= comment.content %></p>
+          <p class="text-sm text-gray-500 mt-2 mb-2">Created on <%= new Date(comment.createdAt).toLocaleString() %></p>
+          <p>Total Votes: <span id="comment-<%= comment._id %>-votes"><%= comment.upvotes - comment.downvotes %></span></p>
+          <button onclick="upvoteComment('<%= comment._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
+          <button onclick="downvoteComment('<%= comment._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
+        </div>
       <% }); %>
     </div>
   </div>
