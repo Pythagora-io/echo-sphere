@@ -32,10 +32,12 @@ subSphereSchema.post('save', function(doc, next) {
 subSphereSchema.post('save', function(error, doc, next) {
   if (error.name === 'MongoError' && error.code === 11000) {
     next(new Error('SubSphere name must be unique'));
-  } else {
+  } else if (error) {
     console.error(`Error saving SubSphere: ${error.message}`);
     console.error(error.stack);
     next(error);
+  } else {
+    next();
   }
 });
 

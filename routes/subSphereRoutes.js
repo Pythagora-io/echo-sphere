@@ -86,7 +86,7 @@ router.get('/subSphere/:subSphereId/posts', isAuthenticated, async (req, res) =>
     const subSphereId = req.params.subSphereId;
     const subSphere = await SubSphere.findById(subSphereId).populate('stickyPosts');
     if (subSphere.bannedUsers.includes(req.session.userId)) {
-      return res.render('exploreSubSpheres', { message: 'You have been banned from this SubSphere. Please try another one.' });
+      return res.render('error', { message: 'You have been banned from this SubSphere. There are plenty more communities to explore and contribute to!' });
     }
     const stickyPosts = await Post.find({ _id: { $in: subSphere.stickyPosts } }).populate('author');
     const posts = await Post.find({ subSphere: subSphereId, _id: { $nin: subSphere.stickyPosts.map(post => post._id) } }).populate('author');
@@ -102,7 +102,7 @@ router.get('/subSphere/:subSphereId/posts', isAuthenticated, async (req, res) =>
   } catch (error) {
     console.error('Error fetching posts for SubSphere:', error);
     console.error(error.stack);
-    res.status(500).send(' Failed to fetch posts for SubSphere');
+    res.status(500).send('Failed to fetch posts for SubSphere');
   }
 });
 
@@ -143,7 +143,8 @@ router.get('/subSphere/:subSphereId/details', isAuthenticated, async (req, res) 
     const settings = {
       allowImages: subSphere.settings.allowImages,
       allowVideos: subSphere.settings.allowVideos,
-      allowTextPosts: subSphere.settings.allowTextPosts
+      allowTextPosts: subSphere.settings.allowTextPosts,
+      minKarmaToPost: subSphere.settings.minKarmaToPost // Include minKarmaToPost in the settings object
     };
     console.log(`SubSphere settings for ${subSphereId} fetched successfully.`);
     res.json(settings);

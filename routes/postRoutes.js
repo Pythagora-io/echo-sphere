@@ -97,7 +97,7 @@ router.get('/posts/:postId', isAuthenticated, async (req, res) => {
       return res.status(404).send('Post not found');
     }
     if (post.subSphere.bannedUsers.includes(req.session.userId)) {
-      return res.render('exploreSubSpheres', { message: 'You have been banned from this SubSphere. Explore other SubSpheres!' });
+      return res.render('error', { message: 'You have been banned from this SubSphere. There are plenty more communities to explore and contribute to!' });
     }
     const isLocked = post.subSphere.lockedPosts.some(lockedPostId => lockedPostId.equals(post._id));
     res.render('posts/postDetails', { post, comments, isLocked });
@@ -105,24 +105,6 @@ router.get('/posts/:postId', isAuthenticated, async (req, res) => {
     console.error('Error fetching post details:', error);
     console.error(error.stack);
     res.status(500).send('Failed to fetch post details.');
-  }
-});
-
-// GET route for viewing posts within a SubSphere
-router.get('/subSphere/:subSphereId/posts', isAuthenticated, async (req, res) => {
-  try {
-    const subSphereId = req.params.subSphereId;
-    const subSphere = await SubSphere.findById(subSphereId);
-    if (subSphere.bannedUsers.includes(req.session.userId)) {
-      return res.render('exploreSubSpheres', { message: 'You have been banned from this SubSphere. Explore other SubSpheres!' });
-    }
-    const posts = await Post.find({ subSphere: subSphereId }).populate('author');
-    const isSubscribed = subSphere.subscribers.includes(req.session.userId);
-    res.render('subSpherePosts', { posts, subSphere, isSubscribed });
-  } catch (error) {
-    console.error('Error fetching posts for SubSphere:', error);
-    console.error(error.stack);
-    res.status(500).send('Failed to fetch posts for SubSphere');
   }
 });
 

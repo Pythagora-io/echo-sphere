@@ -10,12 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
-                console.log(data)
-                const settings = data.settings;
-                document.getElementById('minKarmaToPost').value = settings.minKarmaToPost;
-                document.getElementById('allowImages').checked = settings.allowImages;
-                document.getElementById('allowVideos').checked = settings.allowVideos;
-                document.getElementById('allowTextPosts').checked = settings.allowTextPosts;
+                document.getElementById('minKarmaToPost').value = data.minKarmaToPost;
+                document.getElementById('allowImages').checked = data.allowImages;
+                document.getElementById('allowVideos').checked = data.allowVideos;
+                document.getElementById('allowTextPosts').checked = data.allowTextPosts;
                 console.log('Automod configuration pre-filled with current SubSphere settings.');
             })
             .catch(error => {
