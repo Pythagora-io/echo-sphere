@@ -16,7 +16,7 @@ router.get('/users/:userId', isAuthenticated, async (req, res) => {
       return res.status(404).send('User not found');
     }
 
-    const posts = await Post.find({ author: userId }).populate('subSphere').exec();
+    const posts = await Post.find({ author: userId }).sort({ createdAt: -1 }).populate('subSphere').exec();
     const comments = await Comment.find({ author: userId }).populate({
       path: 'post',
       populate: {

@@ -26,28 +26,28 @@
       <button class="tab-button bg-gradient-to-r from-blue-500 to-teal-500 hover:from-teal-500 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg" onclick="openTab(event, 'Comments')">Comments</button>
     </div>
     <div id="Posts" class="tab-content">
-      <% posts.forEach(function(post) { %>
-        <a href="/posts/<%= post._id %>" class="block">
-          <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <h3 class="text-xl font-bold mb-2"><%= post.title %></h3>
-            <div class="my-2">
-              <% post.flairs.forEach(function(flair) { %>
-                <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full"><%= flair %></span>
-              <% }); %>
-            </div>
-            <% if (post.type === 'image') { %>
-              <img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto">
-            <% } else if (post.type === 'video') { %>
-              <video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video>
-            <% } else { %>
-              <p><%= post.content %></p>
-            <% } %>
-            <p class="text-sm text-gray-500 mt-2 mb-2">Created on <%= new Date(post.createdAt).toLocaleString() %></p>
-            <p>Total Votes: <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span></p>
+      <% posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(function(post) { %>
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onclick="window.location.href='/posts/<%= post._id %>'" style="cursor:pointer;">
+          <h3 class="text-xl font-bold mb-2"><%= post.title %></h3>
+          <div class="my-2">
+            <% post.flairs.forEach(function(flair) { %>
+              <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full"><%= flair %></span>
+            <% }); %>
+          </div>
+          <% if (post.type === 'image') { %>
+            <img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto">
+          <% } else if (post.type === 'video') { %>
+            <video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video>
+          <% } else { %>
+            <p><%= post.content %></p>
+          <% } %>
+          <p class="text-sm text-gray-500 mt-2 mb-2">Created on <%= new Date(post.createdAt).toLocaleString() %></p>
+          <p>Total Votes: <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span></p>
+          <div onclick="event.stopPropagation();">
             <button id="post-upvote-<%= post._id %>" onclick="upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
             <button id="post-downvote-<%= post._id %>" onclick="downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
           </div>
-        </a>
+        </div>
       <% }); %>
     </div>
     <div id="Comments" class="tab-content" style="display:none">

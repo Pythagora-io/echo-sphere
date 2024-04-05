@@ -89,7 +89,7 @@ router.get('/subSphere/:subSphereId/posts', isAuthenticated, async (req, res) =>
       return res.render('error', { message: 'You have been banned from this SubSphere. There are plenty more communities to explore and contribute to!' });
     }
     const stickyPosts = await Post.find({ _id: { $in: subSphere.stickyPosts } }).populate('author');
-    const posts = await Post.find({ subSphere: subSphereId, _id: { $nin: subSphere.stickyPosts.map(post => post._id) } }).populate('author');
+    const posts = await Post.find({ subSphere: subSphereId, _id: { $nin: subSphere.stickyPosts.map(post => post._id) } }).sort({ createdAt: -1 }).populate('author');
     const isSubscribed = subSphere.subscribers.some(subscriber => subscriber.equals(req.session.userId));
     const isModerator = subSphere.moderators.includes(req.session.userId);
 
