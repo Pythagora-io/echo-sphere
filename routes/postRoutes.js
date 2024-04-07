@@ -99,7 +99,8 @@ router.get('/posts/:postId', isAuthenticated, async (req, res) => {
     const comments = await Comment.find({ post: postId }).populate('author');
     if (!post) {
       console.log('Post not found');
-      return res.status(404).send('Post not found');
+      // Render the error.ejs view with a more engaging message
+      return res.render('error', { message: "We couldn't find the post you're looking for. Maybe it's been removed, or perhaps it never existed. Explore other SubSpheres for more interesting content!" });
     }
     if (post.subSphere.bannedUsers.includes(req.session.userId)) {
       return res.render('error', { message: 'You have been banned from this SubSphere. There are plenty more communities to explore and contribute to!' });

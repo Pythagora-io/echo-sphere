@@ -20,6 +20,7 @@ router.post('/deletePost/:postId', isAuthenticated, isModerator, async (req, res
   try {
     const post = await Post.findById(postId);
     if (!post) {
+      console.log(`Post with ID ${postId} not found.`);
       return res.status(404).json({ success: false, message: 'Post not found' });
     }
     await Post.findByIdAndDelete(postId);
@@ -33,8 +34,8 @@ router.post('/deletePost/:postId', isAuthenticated, isModerator, async (req, res
     console.log(`Post with ID ${postId} deleted successfully.`);
     res.json({ success: true, message: 'Post deleted successfully' });
   } catch (error) {
-    console.error('Error deleting post:', error.message, error.stack);
-    res.status(500).json({ success: false, message: 'Failed to delete post' });
+    console.error('Error deleting post:', error);
+    res.status(500).json({ success: false, message: 'Failed to delete post', error: error.toString() });
   }
 });
 
@@ -45,6 +46,7 @@ router.post('/lockPost/:postId', isAuthenticated, isModerator, async (req, res) 
   try {
     const post = await Post.findById(postId);
     if (!post) {
+      console.log(`Post with ID ${postId} not found.`);
       return res.status(404).json({ success: false, message: 'Post not found' });
     }
     await SubSphere.findByIdAndUpdate(subSphereId, { $addToSet: { lockedPosts: postId } });
@@ -58,8 +60,8 @@ router.post('/lockPost/:postId', isAuthenticated, isModerator, async (req, res) 
     console.log(`Post with ID ${postId} locked successfully.`);
     res.json({ success: true, message: 'Post locked successfully' });
   } catch (error) {
-    console.error('Error locking post:', error.message, error.stack);
-    res.status(500).json({ success: false, message: 'Failed to lock post' });
+    console.error('Error locking post:', error);
+    res.status(500).json({ success: false, message: 'Failed to lock post', error: error.toString() });
   }
 });
 
@@ -70,6 +72,7 @@ router.post('/stickyPost/:postId', isAuthenticated, isModerator, async (req, res
   try {
     const post = await Post.findById(postId);
     if (!post) {
+      console.log(`Post with ID ${postId} not found.`);
       return res.status(404).json({ success: false, message: 'Post not found' });
     }
     await SubSphere.findByIdAndUpdate(subSphereId, { $addToSet: { stickyPosts: postId } });
@@ -83,8 +86,8 @@ router.post('/stickyPost/:postId', isAuthenticated, isModerator, async (req, res
     console.log(`Post with ID ${postId} stickied successfully.`);
     res.json({ success: true, message: 'Post stickied successfully' });
   } catch (error) {
-    console.error('Error stickying post:', error.message, error.stack);
-    res.status(500).json({ success: false, message: 'Failed to sticky post' });
+    console.error('Error stickying post:', error);
+    res.status(500).json({ success: false, message: 'Failed to sticky post', error: error.toString() });
   }
 });
 
@@ -104,8 +107,8 @@ router.post('/banUser/:userId', isAuthenticated, isModerator, async (req, res) =
     console.log(`User with ID ${userId} banned successfully.`);
     res.json({ success: true, message: 'User banned successfully' });
   } catch (error) {
-    console.error('Error banning user:', error.message, error.stack);
-    res.status(500).json({ success: false, message: 'Failed to ban user' });
+    console.error('Error banning user:', error);
+    res.status(500).json({ success: false, message: 'Failed to ban user', error: error.toString() });
   }
 });
 
@@ -129,8 +132,8 @@ router.post('/unlockPost/:postId', isAuthenticated, isModerator, async (req, res
     console.log(`Post with ID ${postId} unlocked successfully.`);
     res.json({ success: true, message: 'Post unlocked successfully' });
   } catch (error) {
-    console.error('Error unlocking post:', error.message, error.stack);
-    res.status(500).json({ success: false, message: 'Failed to unlock post' });
+    console.error('Error unlocking post:', error);
+    res.status(500).json({ success: false, message: 'Failed to unlock post', error: error.toString() });
   }
 });
 
@@ -154,8 +157,8 @@ router.post('/unstickyPost/:postId', isAuthenticated, isModerator, async (req, r
     console.log(`Post with ID ${postId} unsticked successfully.`);
     res.json({ success: true, message: 'Post unsticked successfully' });
   } catch (error) {
-    console.error('Error unsticking post:', error.message, error.stack);
-    res.status(500).json({ success: false, message: 'Failed to unsticky post' });
+    console.error('Error unsticking post:', error);
+    res.status(500).json({ success: false, message: 'Failed to unsticky post', error: error.toString() });
   }
 });
 
@@ -175,8 +178,8 @@ router.post('/unbanUser/:userId', isAuthenticated, isModerator, async (req, res)
     console.log(`User with ID ${userId} unbanned successfully.`);
     res.json({ success: true, message: 'User unbanned successfully' });
   } catch (error) {
-    console.error('Error unbanning user:', error.message, error.stack);
-    res.status(500).json({ success: false, message: 'Failed to unban user' });
+    console.error('Error unbanning user:', error);
+    res.status(500).json({ success: false, message: 'Failed to unban user', error: error.toString() });
   }
 });
 
@@ -186,6 +189,7 @@ router.get('/stats', isAuthenticated, async (req, res) => {
   try {
     const subSphere = await SubSphere.findById(subSphereId);
     if (!subSphere) {
+      console.log(`SubSphere with ID ${subSphereId} not found.`);
       return res.status(404).send('SubSphere not found');
     }
     const postsCount = await Post.countDocuments({ subSphere: subSphereId });
@@ -194,7 +198,7 @@ router.get('/stats', isAuthenticated, async (req, res) => {
     const bannedUsersCount = subSphere.bannedUsers.length;
     res.json({ success: true, stats: { postsCount, commentsCount, bannedUsersCount } });
   } catch (error) {
-    console.error('Error fetching stats:', error.message, error.stack);
+    console.error('Error fetching stats:', error);
     res.status(500).send('Failed to fetch stats');
   }
 });
@@ -208,7 +212,7 @@ router.get('/logs', isAuthenticated, isModerator, async (req, res) => {
       .sort('-timestamp');
     res.json({ success: true, logs });
   } catch (error) {
-    console.error('Error fetching moderation logs:', error.message, error.stack);
+    console.error('Error fetching moderation logs:', error);
     res.status(500).send('Failed to fetch moderation logs');
   }
 });
@@ -228,8 +232,8 @@ router.post('/updateSubSphereSettings', isAuthenticated, isModerator, async (req
     console.log(`SubSphere settings updated successfully for SubSphere ID: ${subSphereId}`);
     res.json({ success: true, message: 'SubSphere settings updated successfully' });
   } catch (error) {
-    console.error('Error updating SubSphere settings:', error.message, error.stack);
-    res.status(500).json({ success: false, message: 'Failed to update SubSphere settings' });
+    console.error('Error updating SubSphere settings:', error);
+    res.status(500).json({ success: false, message: 'Failed to update SubSphere settings', error: error.toString() });
   }
 });
 

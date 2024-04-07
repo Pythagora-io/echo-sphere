@@ -5,12 +5,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const unstickyPostButton = document.getElementById('unstickyPostButton');
     const lockPostButton = document.getElementById('lockPostButton');
     const unlockPostButton = document.getElementById('unlockPostButton');
+    const deletePostButton = document.getElementById('deletePostButton'); // Added delete post button
     const banUserIdInput = document.getElementById('banUserId');
     const unbanUserIdInput = document.getElementById('unbanUserId');
     const stickyPostIdInput = document.getElementById('stickyPostId');
     const unstickyPostIdInput = document.getElementById('unstickyPostId');
     const lockPostIdInput = document.getElementById('lockPostId');
     const unlockPostIdInput = document.getElementById('unlockPostId');
+    const deletePostIdInput = document.getElementById('deletePostId'); // Added input for delete post ID
     const subSphereSelect = document.getElementById('subSphereSelect');
     const banUserError = document.getElementById('banUserError');
     const unbanUserError = document.getElementById('unbanUserError');
@@ -24,6 +26,42 @@ document.addEventListener('DOMContentLoaded', function() {
     const unlockPostError = document.createElement('div');
     unlockPostError.id = 'unlockPostError';
     unlockPostIdInput.parentNode.insertBefore(unlockPostError, unlockPostIdInput.nextSibling);
+    const deletePostError = document.createElement('div'); // Added error display for delete post
+    deletePostError.id = 'deletePostError';
+    deletePostIdInput.parentNode.insertBefore(deletePostError, deletePostIdInput.nextSibling);
+
+    // Added event listener for delete post button
+    deletePostButton.addEventListener('click', function() {
+        const postId = deletePostIdInput.value.trim();
+        const subSphereId = subSphereSelect.value;
+        if (!postId) {
+            deletePostError.textContent = 'Post ID is required';
+            deletePostError.classList.remove('hidden');
+            deletePostError.classList.add('text-red-500');
+            return;
+        } else {
+            deletePostError.classList.add('hidden');
+        }
+        fetch(`/moderation/deletePost/${postId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ subSphereId }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Delete Post Success:', data);
+            window.location.reload();
+        })
+        .catch((error) => {
+            console.error('Error deleting post:', error);
+            console.log(error.stack); // Logging the error stack for detailed debugging
+            deletePostError.textContent = 'Failed to delete post';
+            deletePostError.classList.remove('hidden');
+            deletePostError.classList.add('text-red-500');
+        });
+    });
 
     banUserButton.addEventListener('click', function() {
         const userId = banUserIdInput.value.trim();
@@ -50,6 +88,10 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch((error) => {
             console.error('Error banning user:', error);
+            console.log(error.stack); // Logging the error stack for detailed debugging
+            banUserError.textContent = 'Failed to ban user';
+            banUserError.classList.remove('hidden');
+            banUserError.classList.add('text-red-500');
         });
     });
 
@@ -78,6 +120,10 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch((error) => {
             console.error('Error unbanning user:', error);
+            console.log(error.stack); // Logging the error stack for detailed debugging
+            unbanUserError.textContent = 'Failed to unban user';
+            unbanUserError.classList.remove('hidden');
+            unbanUserError.classList.add('text-red-500');
         });
     });
 
@@ -106,6 +152,10 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch((error) => {
             console.error('Error stickying post:', error);
+            console.log(error.stack); // Logging the error stack for detailed debugging
+            stickyPostError.textContent = 'Failed to sticky post';
+            stickyPostError.classList.remove('hidden');
+            stickyPostError.classList.add('text-red-500');
         });
     });
 
@@ -135,6 +185,10 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch((error) => {
             console.error('Error unstickying post:', error);
+            console.log(error.stack); // Logging the error stack for detailed debugging
+            unstickyPostError.textContent = 'Failed to unsticky post';
+            unstickyPostError.classList.remove('hidden');
+            unstickyPostError.classList.add('text-red-500');
         });
     });
 
@@ -163,6 +217,10 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch((error) => {
             console.error('Error locking post:', error);
+            console.log(error.stack); // Logging the error stack for detailed debugging
+            lockPostError.textContent = 'Failed to lock post';
+            lockPostError.classList.remove('hidden');
+            lockPostError.classList.add('text-red-500');
         });
     });
 
@@ -191,6 +249,10 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch((error) => {
             console.error('Error unlocking post:', error);
+            console.log(error.stack); // Logging the error stack for detailed debugging
+            unlockPostError.textContent = 'Failed to unlock post';
+            unlockPostError.classList.remove('hidden');
+            unlockPostError.classList.add('text-red-500');
         });
     });
 });
