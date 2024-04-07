@@ -62,6 +62,17 @@ router.post('/createPost', isAuthenticated, upload.single('content'), async (req
       throw new Error(req.fileValidationError);
     }
 
+    const user = await User.findById(req.session.userId);
+    const subSphere = await SubSphere.findById(req.body.subSphere);
+
+    if (!user || !subSphere) {
+      return res.render('error', { message: "We couldn't find the SubSphere or your user profile. Please try again." });
+    }
+
+    if (user.karma < subSphere.settings.minKarmaToPost) {
+      return res.render('error', { message: "Looks like you need a bit more karma to create a post here. Engage with the community by commenting and voting on existing posts to increase your karma!" });
+    }
+
     let postContent = req.body.content;
     if (['image', 'video'].includes(req.body.type)) {
       if (!req.file) {
