@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 async function getTrendingPosts(limit = 10) {
   try {
-    const posts = await Post.find().sort({ upvotes: -1 }).limit(limit);
+    const posts = await Post.find().sort({ upvotes: -1 }).limit(limit).populate('author', 'username');
     console.log(`Fetched ${posts.length} trending posts.`);
     return posts;
   } catch (error) {
