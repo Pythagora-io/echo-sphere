@@ -47,7 +47,7 @@ router.get('/', asyncHandler(async (req, res) => {
       if (sort === 'top') {
         // Use aggregation pipeline for sorting posts and comments by 'top'
         posts = await Post.aggregate([
-          { $match: { $text: { $search: term }, ...timeFilter } },
+          { $match: { $or: [{ title: { $regex: term, $options: 'i' }}, { content: { $regex: term, $options: 'i' }}], ...timeFilter } },
           { $addFields: { totalVotes: { $subtract: ["$upvotes", "$downvotes"] } } },
           { $sort: { totalVotes: -1 } }
         ]);
@@ -58,7 +58,7 @@ router.get('/', asyncHandler(async (req, res) => {
         ]);
       } else {
         // Fallback to normal find for 'new' sort
-        posts = await Post.find({ $text: { $search: term }, ...timeFilter }).sort(sortOptions).populate('author');
+        posts = await Post.find({ $or: [{ title: { $regex: term, $options: 'i' }}, { content: { $regex: term, $options: 'i' }}], ...timeFilter }).sort(sortOptions).populate('author');
         comments = await Comment.find({ $text: { $search: term }, ...timeFilter }).sort(sortOptions).populate('post').populate('author');
       }
       
