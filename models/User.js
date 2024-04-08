@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
@@ -13,7 +14,9 @@ const userSchema = new mongoose.Schema({
   },
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  karma: { type: Number, default: 1 } // Added karma field with default value of 1
+  karma: { type: Number, default: 1 }, // Added karma field with default value of 1
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 });
 
 userSchema.pre('save', function(next) {
@@ -29,6 +32,11 @@ userSchema.pre('save', function(next) {
     next();
   });
 });
+
+userSchema.methods.generatePasswordReset = function() {
+  this.resetPasswordToken = crypto.randomBytes(20).toString('hex');
+  this.resetPasswordExpires = Date.now() + 3600000; //expires in an hour
+};
 
 const User = mongoose.model('User', userSchema);
 

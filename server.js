@@ -24,6 +24,8 @@ const Message = require('./models/Message'); // Import the Message model
 const Chat = require('./models/Chat'); // Import the Chat model
 const Notification = require('./models/Notification'); // Import the Notification model
 const notificationHandler = require('./utils/notificationHandler'); // Import the notificationHandler utility
+const passport = require('passport');
+require('./config/passport-setup');
 
 if (!process.env.DATABASE_URL || !process.env.SESSION_SECRET) {
   console.error("Error: config environment variables not set. Please create/edit .env configuration file.");
@@ -67,6 +69,10 @@ const sessionMiddleware = session({
   });
 
 app.use(sessionMiddleware);
+
+// Passport initialization
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Socket.io setup
 const server = http.createServer(app);
