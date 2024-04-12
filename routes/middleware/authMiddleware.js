@@ -2,6 +2,8 @@ const SubSphere = require('../../models/SubSphere');
 
 const isAuthenticated = (req, res, next) => {
   if (req.session && req.session.userId) {
+    // Append the theme preference to the response locals
+    res.locals.theme = req.session.theme || 'light';
     return next(); // User is authenticated, proceed to the next middleware/route handler
   } else {
     // Redirect non-authenticated users to the login page instead of sending a 401 status

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/_head.ejs') %>
-  <body class="bg-gray-100">
+  <body class="<%= theme === 'dark' ? 'dark-theme bg-gray-800 text-white' : 'light-theme bg-gray-100 text-gray-900' %>">
 <%- include('partials/_header.ejs') %>
     <main role="main" class="max-w-4xl mx-auto mt-4">
       <div class="text-center">

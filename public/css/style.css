@@ -76,3 +76,44 @@
 .post-content {
   @apply mt-2;
 }
+
+/* Theme specific styles */
+.light-theme {
+  @apply bg-gray-100;
+}
+
+.dark-theme {
+  @apply bg-gray-800 text-white;
+}
+
+/* Adjusting text colors for themes directly within theme classes */
+.light-theme .text-theme, .light-theme h1, .light-theme h2, .light-theme h3, .light-theme p {
+  @apply text-gray-900;
+}
+
+.dark-theme .text-theme, .dark-theme h1, .dark-theme h2, .dark-theme h3, .dark-theme p {
+  @apply text-white;
+}
+
+/* Toggle button styles */
+.toggle-label {
+  @apply cursor-pointer;
+}
+
+.toggle-label .toggle-button {
+  @apply inline-block h-6 w-11 bg-gray-300 rounded-full relative transition-colors duration-200 ease-in-out;
+}
+
+.toggle-label .toggle-button:before {
+  @apply absolute h-4 w-4 bg-white rounded-full top-1 left-1 transition-transform duration-200 ease-in-out;
+  content: "";
+}
+
+/* Theme toggle for dark mode */
+.dark-theme .toggle-button {
+  @apply bg-blue-600;
+}
+
+.dark-theme .toggle-button:before {
+  @apply transform translate-x-5;
+}

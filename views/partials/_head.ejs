@@ -3,4 +3,16 @@
   <title>New_EchoSphere</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/style.css">
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const theme = '<%= theme %>';
+      if (theme === 'dark') {
+        document.documentElement.classList.add('bg-gray-800', 'text-white');
+        document.documentElement.classList.remove('bg-gray-100', 'text-gray-900');
+      } else {
+        document.documentElement.classList.add('bg-gray-100', 'text-gray-900');
+        document.documentElement.classList.remove('bg-gray-800', 'text-white');
+      }
+    });
+  </script>
 </head>

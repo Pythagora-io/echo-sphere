@@ -15,6 +15,7 @@ const messageRoutes = require('./routes/messageRoutes'); // Added message routes
 const notificationRoutes = require('./routes/notificationRoutes'); // Added notification routes
 const searchRoutes = require('./routes/searchRoutes'); // Added search routes
 const moderationRoutes = require('./routes/moderationRoutes'); // Added moderation routes
+const apiRoutes = require('./routes/apiRoutes'); // Added API routes for theme switching
 const multer = require('multer'); // For handling multipart/form-data
 const path = require('path');
 const fs = require('fs');
@@ -141,6 +142,9 @@ app.use((req, res, next) => {
   const sess = req.session;
   // Make session available to all views
   res.locals.session = sess;
+  // Append theme preference to the response locals
+  res.locals.theme = req.session.theme || 'light';
+  console.log(`Theme for current session is set to: ${res.locals.theme}`);
   if (!sess.views) {
     sess.views = 1;
     console.log("Session created at: ", new Date().toISOString());
@@ -185,6 +189,9 @@ app.use('/search', searchRoutes); // Use the search routes
 
 // Moderation Routes
 app.use('/moderation', moderationRoutes); // Use the moderation routes
+
+// API Routes for theme switching
+app.use(apiRoutes); // Use the API routes
 
 // Root path response
 app.get("/", (req, res) => {
