@@ -1,40 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="<%= theme === 'dark' ? 'dark' : '' %>">
 <%- include('partials/_head.ejs') %>
-<body class="bg-gray-100">
+<body class="bg-gray-100 dark:bg-gray-800">
 <%- include('partials/_header.ejs') %>
 <main role="main" class="mt-10">
   <div class="max-w-4xl mx-auto px-4">
-    <h2 class="text-2xl font-bold mb-6">User Page</h2>
+    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-200">User Page</h2>
     <% if (user._id.toString() !== session.userId.toString()) { %>
       <div class="flex space-x-4 my-4">
         <% if (user.followers.includes(session.userId)) { %>
           <form action="/unfollow/<%= user._id %>" method="POST">
-            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Unfollow</button>
+            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded dark:bg-red-600 dark:hover:bg-red-800">Unfollow</button>
           </form>
         <% } else { %>
           <form action="/follow/<%= user._id %>" method="POST">
-            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Follow</button>
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded dark:bg-green-600 dark:hover:bg-green-800">Follow</button>
           </form>
         <% } %>
-        <a href="/messages?recipientId=<%= user._id %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Message</a>
+        <a href="/messages?recipientId=<%= user._id %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded dark:bg-blue-600 dark:hover:bg-blue-800">Message</a>
       </div>
     <% } %>
     <% if (user._id.toString() === session.userId.toString()) { %>
-      <p>Your Karma: <%= karma %></p>
-      <p>Followers: <%= user.followers.length %></p>
+      <p class="text-gray-900 dark:text-gray-200">Your Karma: <%= karma %></p>
+      <p class="text-gray-900 dark:text-gray-200">Followers: <%= user.followers.length %></p>
     <% } %>
     <div class="tabs flex justify-start gap-4 mb-4">
-      <button class="tab-button bg-gradient-to-r from-blue-500 to-teal-500 hover:from-teal-500 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg" onclick="openTab(event, 'Posts')">Posts</button>
-      <button class="tab-button bg-gradient-to-r from-blue-500 to-teal-500 hover:from-teal-500 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg" onclick="openTab(event, 'Comments')">Comments</button>
+      <button class="tab-button bg-gradient-to-r from-blue-500 to-teal-500 hover:from-teal-500 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg dark:bg-gradient-to-r dark:from-blue-600 dark:to-teal-600 dark:hover:from-teal-600 dark:hover:to-blue-600" onclick="openTab(event, 'Posts')">Posts</button>
+      <button class="tab-button bg-gradient-to-r from-blue-500 to-teal-500 hover:from-teal-500 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg dark:bg-gradient-to-r dark:from-blue-600 dark:to-teal-600 dark:hover:from-teal-600 dark:hover:to-blue-600" onclick="openTab(event, 'Comments')">Comments</button>
     </div>
     <div id="Posts" class="tab-content">
       <% posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(function(post) { %>
-        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onclick="window.location.href='/posts/<%= post._id %>'" style="cursor:pointer;">
-          <h3 class="text-xl font-bold mb-2"><%= post.title %></h3>
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 dark:bg-gray-700" onclick="window.location.href='/posts/<%= post._id %>'" style="cursor:pointer;">
+          <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-gray-200"><%= post.title %></h3>
           <div class="my-2">
             <% post.flairs.forEach(function(flair) { %>
-              <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full"><%= flair %></span>
+              <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full dark:bg-blue-600 dark:text-blue-200"><%= flair %></span>
             <% }); %>
           </div>
           <% if (post.type === 'image') { %>
@@ -42,26 +42,26 @@
           <% } else if (post.type === 'video') { %>
             <video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video>
           <% } else { %>
-            <p><%= post.content %></p>
+            <p class="text-gray-900 dark:text-gray-200"><%= post.content %></p>
           <% } %>
-          <p class="text-sm text-gray-500 mt-2 mb-2">Created on <%= new Date(post.createdAt).toLocaleString() %></p>
-          <p>Total Votes: <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span></p>
+          <p class="text-sm text-gray-500 mt-2 mb-2 dark:text-gray-400">Created on <%= new Date(post.createdAt).toLocaleString() %></p>
+          <p class="text-gray-900 dark:text-gray-200">Total Votes: <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span></p>
           <div onclick="event.stopPropagation();">
-            <button id="post-upvote-<%= post._id %>" onclick="upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
-            <button id="post-downvote-<%= post._id %>" onclick="downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
+            <button id="post-upvote-<%= post._id %>" onclick="upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded dark:bg-green-600 dark:hover:bg-green-800">Upvote</button>
+            <button id="post-downvote-<%= post._id %>" onclick="downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded dark:bg-red-600 dark:hover:bg-red-800">Downvote</button>
           </div>
         </div>
       <% }); %>
     </div>
     <div id="Comments" class="tab-content" style="display:none">
       <% comments.forEach(function(comment) { %>
-        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" id="comment-<%= comment._id %>">
-          <h3 class="text-xl font-bold mb-2"><%= comment.post.title %></h3>
-          <p class="text-gray-700 text-base mb-4"><%= comment.content %></p>
-          <p class="text-sm text-gray-500 mt-2 mb-2">Created on <%= new Date(comment.createdAt).toLocaleString() %></p>
-          <p>Total Votes: <span id="comment-<%= comment._id %>-votes"><%= comment.upvotes - comment.downvotes %></span></p>
-          <button onclick="upvoteComment('<%= comment._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
-          <button onclick="downvoteComment('<%= comment._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 dark:bg-gray-700" id="comment-<%= comment._id %>">
+          <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-gray-200"><%= comment.post.title %></h3>
+          <p class="text-gray-700 text-base mb-4 dark:text-gray-200"><%= comment.content %></p>
+          <p class="text-sm text-gray-500 mt-2 mb-2 dark:text-gray-400">Created on <%= new Date(comment.createdAt).toLocaleString() %></p>
+          <p class="text-gray-900 dark:text-gray-200">Total Votes: <span id="comment-<%= comment._id %>-votes"><%= comment.upvotes - comment.downvotes %></span></p>
+          <button onclick="upvoteComment('<%= comment._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded dark:bg-green-600 dark:hover:bg-green-800">Upvote</button>
+          <button onclick="downvoteComment('<%= comment._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded dark:bg-red-600 dark:hover:bg-red-800">Downvote</button>
         </div>
       <% }); %>
     </div>

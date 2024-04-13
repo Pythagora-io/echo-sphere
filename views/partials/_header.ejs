@@ -1,43 +1,43 @@
 <link rel="stylesheet" href="/css/dynamic_style.css">
-<nav class="bg-gray-800 p-4">
+<nav class="bg-gray-800 dark:bg-gray-900 p-4">
   <div class="container mx-auto flex justify-between items-center">
     <a class="text-white text-lg font-bold" href="/">New_EchoSphere</a>
     <div>
       <ul class="flex space-x-4">
         <% if (typeof session.userId !== 'undefined') { %>
           <li>
-            <a class="text-gray-300 hover:text-white" href="/">Home</a>
+            <a class="text-gray-300 hover:text-white dark:hover:text-gray-200" href="/">Home</a>
           </li>
           <li>
-            <a class="text-gray-300 hover:text-white" href="/subSpheresList">SubSpheres</a>
+            <a class="text-gray-300 hover:text-white dark:hover:text-gray-200" href="/subSpheresList">SubSpheres</a>
           </li>
           <li>
-            <a class="text-gray-300 hover:text-white" href="/profile">Profile</a>
+            <a class="text-gray-300 hover:text-white dark:hover:text-gray-200" href="/profile">Profile</a>
           </li>
           <li>
-            <a class="text-gray-300 hover:text-white" href="/createPost">Create Post</a>
+            <a class="text-gray-300 hover:text-white dark:hover:text-gray-200" href="/createPost">Create Post</a>
           </li>
           <li>
-            <a class="text-gray-300 hover:text-white" href="/messages">Messages</a>
+            <a class="text-gray-300 hover:text-white dark:hover:text-gray-200" href="/messages">Messages</a>
           </li>
           <li>
-            <a class="text-gray-300 hover:text-white" href="/notifications">Notifications</a>
+            <a class="text-gray-300 hover:text-white dark:hover:text-gray-200" href="/notifications">Notifications</a>
           </li>
           <li>
-            <a class="text-gray-300 hover:text-white" href="/search">Search</a>
+            <a class="text-gray-300 hover:text-white dark:hover:text-gray-200" href="/search">Search</a>
           </li>
           <li>
-            <a class="text-gray-300 hover:text-white" href="/auth/logout">Logout</a>
+            <a class="text-gray-300 hover:text-white dark:hover:text-gray-200" href="/auth/logout">Logout</a>
           </li>
         <% } else { %>
           <li>
-            <a class="text-gray-300 hover:text-white" href="/">Home</a>
+            <a class="text-gray-300 hover:text-white dark:hover:text-gray-200" href="/">Home</a>
           </li>
           <li>
-            <a class="text-gray-300 hover:text-white" href="/auth/login">Login</a>
+            <a class="text-gray-300 hover:text-white dark:hover:text-gray-200" href="/auth/login">Login</a>
           </li>
           <li>
-            <a class="text-gray-300 hover:text-white" href="/auth/register">Register</a>
+            <a class="text-gray-300 hover:text-white dark:hover:text-gray-200" href="/auth/register">Register</a>
           </li>
         <% } %>
       </ul>

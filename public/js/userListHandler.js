@@ -15,7 +15,7 @@ function getChats() {
       data.chats.forEach(chat => {
         const chatElement = document.createElement('li');
         chatElement.textContent = chat.participants.map(participant => participant.username).join(', '); // Displaying participant usernames
-        chatElement.className = 'p-2 bg-gray-300 mb-2 rounded hover:bg-gray-400 cursor-pointer';
+        chatElement.className = 'p-2 bg-gray-300 dark:bg-gray-600 mb-2 rounded hover:bg-gray-400 dark:hover:bg-gray-500 cursor-pointer';
         chatElement.onclick = () => {
           // Assuming selectChat is a function that handles chat selection from the list
           selectChat(chat.chatId); // Using chatId to select chat

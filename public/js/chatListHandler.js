@@ -14,7 +14,7 @@ function fetchChats() {
         data.chats.forEach(chat => {
           const listItem = document.createElement('li');
           listItem.textContent = chat.participants.filter(participant => participant._id !== document.getElementById('userId').value).map(participant => participant.username).join(', '); // Displaying only the recipient's username, excluding the current user
-          listItem.className = 'p-2 bg-gray-300 mb-2 rounded hover:bg-gray-400 cursor-pointer';
+          listItem.className = 'p-2 bg-gray-300 dark:bg-gray-600 mb-2 rounded hover:bg-gray-400 dark:hover:bg-gray-500 cursor-pointer';
           listItem.setAttribute('data-chat-id', chat.chatId); // Use data attribute to store chatId
           listItem.onclick = () => selectChat(chat.chatId); // Adjusted to use chatId for chat selection
           chatListElement.appendChild(listItem);
@@ -55,7 +55,8 @@ function selectChat(chatId) {
           .then(data => {
             if (data.success) {
               console.log(`All messages from ${username} marked as read.`);
-              selectedListItem.classList.remove('unread-message');
+              selectedListItem.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+              selectedListItem.classList.add('bg-gray-100', 'dark:bg-gray-800');
             } else {
               console.error('Failed to mark messages as read');
             }
@@ -82,7 +83,7 @@ function displayMessages(messages, chatId) {
     const messageElement = document.createElement('div');
     messageElement.className = 'flex flex-col mb-4 ' + (message.sender._id === document.getElementById('userId').value ? 'items-end' : 'items-start'); // Apply flex and margin classes for consistent styling
     const messageContent = document.createElement('div');
-    messageContent.className = (message.sender._id === document.getElementById('userId').value ? 'bg-blue-100' : 'bg-gray-200') + ' rounded-lg p-2';
+    messageContent.className = (message.sender._id === document.getElementById('userId').value ? 'bg-blue-100 dark:bg-blue-700' : 'bg-gray-200 dark:bg-gray-500') + ' rounded-lg p-2';
     messageContent.innerText = message.content;
     messageElement.appendChild(messageContent);
     messagesContainer.appendChild(messageElement);

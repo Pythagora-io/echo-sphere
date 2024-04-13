@@ -1,11 +1,11 @@
 <form action="/search" method="GET" class="flex flex-col space-y-4">
   <div class="flex flex-col">
-    <label for="searchTerm" class="mb-2 font-bold">Search Term:</label>
-    <input type="text" id="searchTerm" name="term" placeholder="Enter search term..." class="border-2 border-gray-300 p-2 rounded-md" required>
+    <label for="searchTerm" class="mb-2 font-bold text-gray-900 dark:text-gray-200">Search Term:</label>
+    <input type="text" id="searchTerm" name="term" placeholder="Enter search term..." class="border-2 border-gray-300 dark:border-gray-600 p-2 rounded-md dark:bg-gray-700 dark:text-gray-300" required>
   </div>
   <div class="flex flex-col">
-    <label for="timeFilter" class="mb-2 font-bold">Time:</label>
-    <select id="timeFilter" name="time" class="border-2 border-gray-300 p-2 rounded-md">
+    <label for="timeFilter" class="mb-2 font-bold text-gray-900 dark:text-gray-200">Time:</label>
+    <select id="timeFilter" name="time" class="border-2 border-gray-300 dark:border-gray-600 p-2 rounded-md dark:bg-gray-700 dark:text-gray-300">
       <option value="all">All Time</option>
       <option value="day">Past 24 Hours</option>
       <option value="week">Past Week</option>
@@ -14,15 +14,15 @@
     </select>
   </div>
   <div class="flex flex-col">
-    <label class="mb-2 font-bold">Sort By:</label>
+    <label class="mb-2 font-bold text-gray-900 dark:text-gray-200">Sort By:</label>
     <div class="flex items-center space-x-4">
       <div>
         <input type="radio" id="sortNew" name="sort" value="new" checked>
-        <label for="sortNew">New</label>
+        <label for="sortNew" class="text-gray-900 dark:text-gray-200">New</label>
       </div>
       <div>
         <input type="radio" id="sortTop" name="sort" value="top">
-        <label for="sortTop">Top</label>
+        <label for="sortTop" class="text-gray-900 dark:text-gray-200">Top</label>
       </div>
     </div>
   </div>

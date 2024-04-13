@@ -68,12 +68,12 @@ document.addEventListener('DOMContentLoaded', function() {
           const logsList = document.getElementById('moderationLogsList');
           logsList.innerHTML = ''; // Clear existing logs
           if (data.logs.length === 0) {
-            logsList.innerHTML = '<div class="text-center py-5"><p class="text-sm text-gray-500">No moderation logs found. Your SubSphere is running smoothly!</p></div>';
+            logsList.innerHTML = '<div class="text-center py-5"><p class="text-sm text-gray-500 dark:text-gray-400">No moderation logs found. Your SubSphere is running smoothly!</p></div>';
           } else {
             data.logs.forEach(log => {
               const logItem = document.createElement('div');
-              logItem.classList.add('mb-2', 'p-2', 'bg-gray-100', 'rounded', 'shadow');
-              logItem.innerHTML = `<div class="font-bold text-lg">${new Date(log.timestamp).toLocaleString()}</div><div>Target: <span class="font-semibold">${log.target}</span></div><div>Action: <span class="font-semibold">${log.action}</span></div><div>Target ID: <span class="font-semibold">${log.targetId}</span></div>`;
+              logItem.classList.add('mb-2', 'p-2', 'bg-gray-100', 'dark:bg-gray-800', 'rounded', 'shadow');
+              logItem.innerHTML = `<div class="font-bold text-lg text-gray-900 dark:text-white">${new Date(log.timestamp).toLocaleString()}</div><div>Target: <span class="font-semibold text-gray-900 dark:text-white">${log.target}</span></div><div>Action: <span class="font-semibold text-gray-900 dark:text-white">${log.action}</span></div><div>Target ID: <span class="font-semibold text-gray-900 dark:text-white">${log.targetId}</span></div>`;
               logsList.appendChild(logItem);
             });
           }

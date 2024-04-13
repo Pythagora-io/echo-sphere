@@ -16,12 +16,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response.ok) {
                 console.log(`Theme changed to: ${theme}`);
                 if (theme === 'dark') {
-                    document.body.className = '';
-                    document.body.classList.add('dark-theme');
+                    document.documentElement.className = '';
+                    document.documentElement.classList.add('dark-theme');
                     themeLabel.textContent = 'Dark Mode';
                 } else {
-                    document.body.className = '';
-                    document.body.classList.add('light-theme');
+                    document.documentElement.className = '';
+                    document.documentElement.classList.add('light-theme');
                     themeLabel.textContent = 'Light Mode';
                 }
             } else {

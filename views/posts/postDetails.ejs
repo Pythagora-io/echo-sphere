@@ -1,65 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="<%= theme === 'dark' ? 'dark' : '' %>">
 <%- include('../partials/_head.ejs') %>
-<body class="bg-gray-100">
+<body class="bg-gray-100 dark:bg-gray-800">
 <%- include('../partials/_header.ejs') %>
 <main role="main" class="mt-10">
   <div class="max-w-4xl mx-auto px-4">
-    <h2 class="text-2xl font-bold mb-2"><%= post.title %></h2>
+    <h2 class="text-2xl font-bold mb-2 text-gray-900 dark:text-gray-200"><%= post.title %></h2>
     <div class="mt-2 mb-4">
       <% post.flairs.forEach(function(flair) { %>
-        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full"><%= flair %></span>
+        <span class="inline-block bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 text-xs font-semibold mr-2 px-3 py-1 rounded-full"><%= flair %></span>
       <% }); %>
     </div>
-    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div class="bg-white dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <p class="mt-4">
-        <a href="/subSphere/<%= post.subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700 font-bold"><%= post.subSphere.name %></a>
+        <a href="/subSphere/<%= post.subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 font-bold"><%= post.subSphere.name %></a>
       </p>
       <% if (post.type === 'image') { %>
         <img src="<%= post.content %>" alt="Post Image" class="max-w-full h-auto">
       <% } else if (post.type === 'video') { %>
         <video controls src="<%= post.content %>" class="max-w-full h-auto">Your browser does not support the video tag.</video>
       <% } else if (post.type === 'link') { %>
-        <a href="<%= post.content %>" target="_blank" rel="noopener noreferrer"><%= post.content %></a>
+        <a href="<%= post.content %>" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400"><%= post.content %></a>
       <% } else { %>
-        <p><%= post.content %></p>
+        <p class="text-gray-900 dark:text-gray-200"><%= post.content %></p>
       <% } %>
-      <p class="mt-4 bg-gray-100 p-2 rounded text-sm text-gray-600">Posted by <a href="/users/<%= post.author._id %>" class="underline"><%= post.author.username %></a> on <%= post.createdAt.toDateString() %></p>
+      <p class="mt-4 bg-gray-100 dark:bg-gray-800 p-2 rounded text-sm text-gray-600 dark:text-gray-400">Posted by <a href="/users/<%= post.author._id %>" class="underline text-gray-900 dark:text-gray-200"><%= post.author.username %></a> on <%= post.createdAt.toDateString() %></p>
       <% if (!isLocked) { %>
         <div class="mt-4">
-          <button id="post-upvote-<%= post._id %>" onclick="upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
-          <button id="post-downvote-<%= post._id %>" onclick="downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
+          <button id="post-upvote-<%= post._id %>" onclick="upvotePost('<%= post._id %>')" class="bg-green-500 hover:bg-green-700 dark:hover:bg-green-800 text-white font-bold py-2 px-4 rounded">Upvote</button>
+          <button id="post-downvote-<%= post._id %>" onclick="downvotePost('<%= post._id %>')" class="bg-red-500 hover:bg-red-700 dark:hover:bg-red-800 text-white font-bold py-2 px-4 rounded">Downvote</button>
           <span id="post-<%= post._id %>-votes"><%= post.upvotes - post.downvotes %></span> votes
         </div>
       <% } else { %>
-        <p class="mt-4 text-red-500">This post is locked and cannot be voted on or commented.</p>
+        <p class="mt-4 text-red-500 dark:text-red-400">This post is locked and cannot be voted on or commented.</p>
       <% } %>
     </div>
     <% if (!isLocked) { %>
-      <h3 class="text-2xl font-bold mb-6">Comments</h3>
+      <h3 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-200">Comments</h3>
       <% comments.forEach(function(comment) { %>
-        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" id="comment-<%= comment._id %>">
-          <p class="text-gray-700 text-base mb-4"><%= comment.content %></p>
-          <p class="mt-4 bg-gray-100 p-2 rounded text-sm text-gray-600">Commented by <a href="/users/<%= comment.author._id %>" class="underline"><%= comment.author.username %></a> on <%= comment.createdAt.toDateString() %></p>
+        <div class="bg-white dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4" id="comment-<%= comment._id %>">
+          <p class="text-gray-700 dark:text-gray-200 text-base mb-4"><%= comment.content %></p>
+          <p class="mt-4 bg-gray-100 dark:bg-gray-800 p-2 rounded text-sm text-gray-600 dark:text-gray-400">Commented by <a href="/users/<%= comment.author._id %>" class="underline text-gray-900 dark:text-gray-200"><%= comment.author.username %></a> on <%= comment.createdAt.toDateString() %></p>
           <div class="flex items-center justify-start">
-            <button id="comment-upvote-<%= comment._id %>" onclick="upvoteComment('<%= comment._id %>')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Upvote</button>
-            <button id="comment-downvote-<%= comment._id %>" onclick="downvoteComment('<%= comment._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2">Downvote</button>
+            <button id="comment-upvote-<%= comment._id %>" onclick="upvoteComment('<%= comment._id %>')" class="bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mr-2">Upvote</button>
+            <button id="comment-downvote-<%= comment._id %>" onclick="downvoteComment('<%= comment._id %>')" class="bg-red-500 hover:bg-red-700 dark:hover:bg-red-800 text-white font-bold py-2 px-4 rounded mr-2">Downvote</button>
             <span>Votes: <span id="comment-<%= comment._id %>-votes"><%= comment.upvotes - comment.downvotes %></span></span>
           </div>
         </div>
       <% }); %>
-      <form action="/createComment" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <form action="/createComment" method="POST" class="bg-white dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <input type="hidden" name="postId" value="<%= post._id %>" />
         <div class="mb-4">
-          <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Comment:</label>
-          <textarea name="content" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+          <label for="content" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Comment:</label>
+          <textarea name="content" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline"></textarea>
         </div>
         <div class="flex items-center justify-between">
-          <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Post Comment</button>
+          <button type="submit" class="bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Post Comment</button>
         </div>
       </form>
     <% } else { %>
-      <p class="text-xl font-bold mb-6 text-red-500">Comments are locked for this post.</p>
+      <p class="text-xl font-bold mb-6 text-red-500 dark:text-red-400">Comments are locked for this post.</p>
     <% } %>
   </div>
 </main>

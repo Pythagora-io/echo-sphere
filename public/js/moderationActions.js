@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!postId) {
             deletePostError.textContent = 'Post ID is required';
             deletePostError.classList.remove('hidden');
-            deletePostError.classList.add('text-red-500');
+            deletePostError.classList.add('text-red-500', 'dark:text-red-400');
             return;
         } else {
             deletePostError.classList.add('hidden');
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(error.stack); // Logging the error stack for detailed debugging
             deletePostError.textContent = 'Failed to delete post';
             deletePostError.classList.remove('hidden');
-            deletePostError.classList.add('text-red-500');
+            deletePostError.classList.add('text-red-500', 'dark:text-red-400');
         });
     });
 
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!userId) {
             banUserError.textContent = 'User ID is required';
             banUserError.classList.remove('hidden');
-            banUserError.classList.add('text-red-500');
+            banUserError.classList.add('text-red-500', 'dark:text-red-400');
             return;
         } else {
             banUserError.classList.add('hidden');
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(error.stack); // Logging the error stack for detailed debugging
             banUserError.textContent = 'Failed to ban user';
             banUserError.classList.remove('hidden');
-            banUserError.classList.add('text-red-500');
+            banUserError.classList.add('text-red-500', 'dark:text-red-400');
         });
     });
 
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!userId) {
             unbanUserError.textContent = 'User ID is required';
             unbanUserError.classList.remove('hidden');
-            unbanUserError.classList.add('text-red-500');
+            unbanUserError.classList.add('text-red-500', 'dark:text-red-400');
             return;
         } else {
             unbanUserError.classList.add('hidden');
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(error.stack); // Logging the error stack for detailed debugging
             unbanUserError.textContent = 'Failed to unban user';
             unbanUserError.classList.remove('hidden');
-            unbanUserError.classList.add('text-red-500');
+            unbanUserError.classList.add('text-red-500', 'dark:text-red-400');
         });
     });
 
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!postId) {
             stickyPostError.textContent = 'Post ID is required';
             stickyPostError.classList.remove('hidden');
-            stickyPostError.classList.add('text-red-500');
+            stickyPostError.classList.add('text-red-500', 'dark:text-red-400');
             return;
         } else {
             stickyPostError.classList.add('hidden');
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(error.stack); // Logging the error stack for detailed debugging
             stickyPostError.textContent = 'Failed to sticky post';
             stickyPostError.classList.remove('hidden');
-            stickyPostError.classList.add('text-red-500');
+            stickyPostError.classList.add('text-red-500', 'dark:text-red-400');
         });
     });
 
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!postId) {
             unstickyPostError.textContent = 'Post ID is required';
             unstickyPostError.classList.remove('hidden');
-            unstickyPostError.classList.add('text-red-500');
+            unstickyPostError.classList.add('text-red-500', 'dark:text-red-400');
             return;
         } else {
             unstickyPostError.classList.add('hidden');
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(error.stack); // Logging the error stack for detailed debugging
             unstickyPostError.textContent = 'Failed to unsticky post';
             unstickyPostError.classList.remove('hidden');
-            unstickyPostError.classList.add('text-red-500');
+            unstickyPostError.classList.add('text-red-500', 'dark:text-red-400');
         });
     });
 
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!postId) {
             lockPostError.textContent = 'Post ID is required';
             lockPostError.classList.remove('hidden');
-            lockPostError.classList.add('text-red-500');
+            lockPostError.classList.add('text-red-500', 'dark:text-red-400');
             return;
         } else {
             lockPostError.classList.add('hidden');
@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(error.stack); // Logging the error stack for detailed debugging
             lockPostError.textContent = 'Failed to lock post';
             lockPostError.classList.remove('hidden');
-            lockPostError.classList.add('text-red-500');
+            lockPostError.classList.add('text-red-500', 'dark:text-red-400');
         });
     });
 
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!postId) {
             unlockPostError.textContent = 'Post ID is required';
             unlockPostError.classList.remove('hidden');
-            unlockPostError.classList.add('text-red-500');
+            unlockPostError.classList.add('text-red-500', 'dark:text-red-400');
             return;
         } else {
             unlockPostError.classList.add('hidden');
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(error.stack); // Logging the error stack for detailed debugging
             unlockPostError.textContent = 'Failed to unlock post';
             unlockPostError.classList.remove('hidden');
-            unlockPostError.classList.add('text-red-500');
+            unlockPostError.classList.add('text-red-500', 'dark:text-red-400');
         });
     });
 });

@@ -18,10 +18,10 @@ socket.on('receiveMessage', ({ chatId, senderId, message }) => {
     messageElement.classList.add('flex', 'flex-col', 'mb-4');
     if (senderId === userId) {
       messageElement.classList.add('items-end');
-      messageElement.innerHTML = `<div class="bg-blue-100 float-right clear-right text-right mr-2 p-2 rounded-lg">${message}</div>`;
+      messageElement.innerHTML = `<div class="bg-blue-100 dark:bg-blue-700 float-right clear-right text-right mr-2 p-2 rounded-lg">${message}</div>`;
     } else {
       messageElement.classList.add('items-start');
-      messageElement.innerHTML = `<div class="bg-gray-200 float-left clear-left text-left ml-2 p-2 rounded-lg">${message}</div>`;
+      messageElement.innerHTML = `<div class="bg-gray-200 dark:bg-gray-600 float-left clear-left text-left ml-2 p-2 rounded-lg">${message}</div>`;
     }
     messageContainer.appendChild(messageElement);
     // Automatically scroll to the bottom of the message container to show the latest message

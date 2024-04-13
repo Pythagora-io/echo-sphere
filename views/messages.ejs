@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="<%= theme === 'dark' ? 'dark' : '' %>">
 <%- include('partials/_head.ejs') %>
-<body class="bg-gray-100">
+<body class="bg-gray-100 dark:bg-gray-800">
 <%- include('partials/_header.ejs') %>
 <main role="main" class="flex mt-10">
-  <aside class="w-1/4 h-screen overflow-y-auto bg-gray-200">
+  <aside class="w-1/4 h-screen overflow-y-auto bg-gray-200 dark:bg-gray-700">
     <div class="p-4">
-      <h2 class="font-bold text-lg mb-4">Chats</h2>
-      <ul id="chatList" class="divide-y divide-gray-400">
+      <h2 class="font-bold text-lg mb-4 text-gray-900 dark:text-gray-200">Chats</h2>
+      <ul id="chatList" class="divide-y divide-gray-400 dark:divide-gray-600">
         <% chats.forEach(function(chat) { %>
           <% chat.participants.forEach(function(participant) { %>
             <% if (participant._id.toString() !== currentUser) { %>
-              <li class="<%= selectedChatId === chat.chatId ? 'bg-gray-300' : '' %> p-2 rounded hover:bg-gray-400 cursor-pointer" onclick="selectChat('<%= chat.chatId %>')" data-chat-id="<%= chat.chatId %>">
+              <li class="<%= selectedChatId === chat.chatId ? 'bg-gray-300 dark:bg-gray-600' : '' %> p-2 rounded hover:bg-gray-400 dark:hover:bg-gray-500 cursor-pointer" onclick="selectChat('<%= chat.chatId %>')" data-chat-id="<%= chat.chatId %>">
                 <%= participant.username %>
               </li>
             <% } %>
@@ -20,26 +20,26 @@
       </ul>
     </div>
   </aside>
-  <section class="w-3/4 h-screen overflow-y-auto p-4 bg-gray-50">
+  <section class="w-3/4 h-screen overflow-y-auto p-4 bg-gray-50 dark:bg-gray-600">
     <div id="messages" class="space-y-4">
       <% if (messages && messages.length > 0) { %>
         <% messages.forEach(function(message) { %>
           <div class="flex flex-col mb-4">
-            <div class="<%= message.sender._id.toString() === currentUser ? 'ml-auto bg-blue-100' : 'mr-auto bg-gray-200' %> rounded-lg p-2">
-              <p><%= message.content %></p>
+            <div class="<%= message.sender._id.toString() === currentUser ? 'ml-auto bg-blue-100 dark:bg-blue-700' : 'mr-auto bg-gray-200 dark:bg-gray-500' %> rounded-lg p-2">
+              <p class="text-gray-900 dark:text-gray-200"><%= message.content %></p>
             </div>
           </div>
         <% }); %>
       <% } else { %>
-        <p>Select a chat to view messages or start a new conversation.</p>
+        <p class="text-gray-900 dark:text-gray-200">Select a chat to view messages or start a new conversation.</p>
       <% } %>
     </div>
     <div class="mt-4">
       <form id="sendMessageForm">
-        <input type="text" id="messageInput" class="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Type a message...">
+        <input type="text" id="messageInput" class="border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline" placeholder="Type a message...">
         <input type="hidden" id="chatId" value="<%= selectedChatId || '' %>">
         <input type="hidden" id="userId" value="<%= currentUser %>">
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2">Send</button>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2">Send</button>
       </form>
     </div>
   </section>

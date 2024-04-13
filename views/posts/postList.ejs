@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="<%= theme === 'dark' ? 'dark' : '' %>">
 <%- include('../partials/_head.ejs') %>
-<body class="bg-gray-100">
+<body class="bg-gray-100 dark:bg-gray-800">
 <%- include('../partials/_header.ejs') %>
 <main role="main" class="mt-10">
   <div class="max-w-4xl mx-auto px-4">
-    <h2 class="text-2xl font-bold mb-6">Posts</h2>
+    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-200">Posts</h2>
     <% posts.forEach(function(post) { %>
-      <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h3 class="text-xl font-bold mb-2"><%= post.title %></h3>
-        <p><%= post.content %></p>
+      <div class="bg-white dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-gray-200"><%= post.title %></h3>
+        <p class="text-gray-900 dark:text-gray-200"><%= post.content %></p>
         <div class="mt-4">
-          <button onclick="vote('up', '<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Upvote</button>
-          <button onclick="vote('down', '<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Downvote</button>
-          <span id="vote-count-<%= post._id %>"><%= post.upvotes - post.downvotes %></span> votes
+          <button onclick="vote('up', '<%= post._id %>')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded dark:bg-green-600 dark:hover:bg-green-800">Upvote</button>
+          <button onclick="vote('down', '<%= post._id %>')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded dark:bg-red-600 dark:hover:bg-red-800">Downvote</button>
+          <span id="vote-count-<%= post._id %>" class="text-gray-900 dark:text-gray-200"><%= post.upvotes - post.downvotes %></span> votes
         </div>
       </div>
     <% }); %>

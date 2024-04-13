@@ -1,12 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Search Results</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="/css/style.css">
-</head>
-<body class="bg-gray-100">
+<html lang="en" class="<%= theme === 'dark' ? 'dark' : '' %>">
+<%- include('partials/_head.ejs') %>
+<body class="bg-gray-100 dark:bg-gray-800">
 <%- include('partials/_header.ejs') %>
 <main role="main" class="max-w-7xl mx-auto mt-4 flex flex-col md:flex-row flex-wrap">
   <div class="md:w-1/4 p-4 md:sticky top-0 self-start order-first md:order-none flex-grow">
@@ -14,7 +9,7 @@
   </div>
   <div class="md:w-3/4 p-4 order-2 md:order-2 flex-grow" id="mainPanel">
     <% if (term) { %>
-      <h1 class="text-4xl font-bold">Search Results for "<%= term %>"</h1>
+      <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-200">Search Results for "<%= term %>"</h1>
       <!-- Displaying applied filters and sort options as tags -->
       <div class="flex flex-wrap gap-2 my-4">
         <% if (time && time !== 'all') { %>
@@ -25,19 +20,19 @@
         <% } %>
       </div>
       <div class="tabs" id="tabs">
-        <button class="tablinks px-4 py-2 border-b-2 font-medium text-sm focus:outline-none focus:border-indigo-500" data-tab="Posts">Posts</button>
-        <button class="tablinks px-4 py-2 border-b-2 font-medium text-sm focus:outline-none focus:border-indigo-500" data-tab="Comments">Comments</button>
-        <button class="tablinks px-4 py-2 border-b-2 font-medium text-sm focus:outline-none focus:border-indigo-500" data-tab="SubSpheres">SubSpheres</button>
+        <button class="tablinks px-4 py-2 border-b-2 font-medium text-sm focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-300" data-tab="Posts">Posts</button>
+        <button class="tablinks px-4 py-2 border-b-2 font-medium text-sm focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-300" data-tab="Comments">Comments</button>
+        <button class="tablinks px-4 py-2 border-b-2 font-medium text-sm focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-300" data-tab="SubSpheres">SubSpheres</button>
       </div>
       <div id="Posts" class="tabcontent">
-        <h2 class="text-2xl font-bold mb-4">Posts</h2>
+        <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-200">Posts</h2>
         <% if (posts && posts.length > 0) { %>
           <% posts.forEach(function(post) { %>
             <a href="/posts/<%= post._id %>" class="block">
-              <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex justify-between items-center">
+              <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex justify-between items-center dark:bg-gray-700">
                 <div>
-                  <h3 class="text-xl font-bold text-blue-500 hover:text-blue-700"><%= post.title %></h3>
-                  <p class="text-sm text-gray-500">By <%= post.author.username %> on <%= new Date(post.createdAt).toLocaleString() %></p>
+                  <h3 class="text-xl font-bold text-blue-500 hover:text-blue-700 dark:hover:text-blue-400"><%= post.title %></h3>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">By <%= post.author.username %> on <%= new Date(post.createdAt).toLocaleString() %></p>
                   <p>Total Votes: <%= post.upvotes - post.downvotes %></p>
                 </div>
                 <% if (post.type === 'video') { %>
@@ -50,44 +45,44 @@
             </a>
           <% }); %>
         <% } else { %>
-          <p>No posts found.</p>
+          <p class="text-gray-900 dark:text-gray-200">No posts found.</p>
         <% } %>
       </div>
       <div id="Comments" class="tabcontent" style="display:none;">
-        <h2 class="text-2xl font-bold mb-4">Comments</h2>
+        <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-200">Comments</h2>
         <% if (comments && comments.length > 0) { %>
           <% comments.forEach(function(comment) { %>
             <a href="/posts/<%= comment.post._id %>#comment-<%= comment._id %>" class="block">
-              <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <p class="text-gray-700 text-base mb-4"><%= comment.content %></p>
-                <p class="text-sm text-gray-500">By <%= comment.author.username %> on <%= new Date(comment.createdAt).toLocaleString() %></p>
+              <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 dark:bg-gray-700">
+                <p class="text-gray-700 text-base mb-4 dark:text-gray-200"><%= comment.content %></p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">By <%= comment.author.username %> on <%= new Date(comment.createdAt).toLocaleString() %></p>
                 <p>Total Votes: <%= comment.upvotes - comment.downvotes %></p>
               </div>
             </a>
           <% }); %>
         <% } else { %>
-          <p>No comments found.</p>
+          <p class="text-gray-900 dark:text-gray-200">No comments found.</p>
         <% } %>
       </div>
       <div id="SubSpheres" class="tabcontent" style="display:none;">
-        <h2 class="text-2xl font-bold mb-4">SubSpheres</h2>
+        <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-200">SubSpheres</h2>
         <% if (subSpheres && subSpheres.length > 0) { %>
           <% subSpheres.forEach(function(subSphere) { %>
             <a href="/subSphere/<%= subSphere._id %>/posts" class="block">
-              <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <p class="text-blue-500 hover:text-blue-700 font-bold"><%= subSphere.name %>: <%= subSphere.description %></p>
+              <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 dark:bg-gray-700">
+                <p class="text-blue-500 hover:text-blue-700 font-bold dark:hover:text-blue-400"><%= subSphere.name %>: <%= subSphere.description %></p>
                 <p>Subscribers: <%= subSphere.subscribers ? subSphere.subscribers.length : 'N/A' %></p>
               </div>
             </a>
           <% }); %>
         <% } else { %>
-          <p>No SubSpheres found.</p>
+          <p class="text-gray-900 dark:text-gray-200">No SubSpheres found.</p>
         <% } %>
       </div>
     <% } else { %>
       <div class="mt-6">
-        <h1 class="text-4xl font-bold">Welcome to the Search Page</h1>
-        <p class="mt-4 text-lg">Use the search form to find Posts, Comments, and SubSpheres.</p>
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-200">Welcome to the Search Page</h1>
+        <p class="mt-4 text-lg text-gray-900 dark:text-gray-200">Use the search form to find Posts, Comments, and SubSpheres.</p>
       </div>
     <% } %>
   </div>

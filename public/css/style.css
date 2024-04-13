@@ -2,19 +2,16 @@
 
 /* Tailwind CSS Custom Styles */
 
-/* You might want to add custom styles here that are specific to your application's design requirements. 
-   This could include styles for custom components that aren't directly covered by Tailwind's utility classes. 
-   Remember, Tailwind encourages a utility-first approach, so try to use its utility classes wherever possible 
-   before adding custom styles here. */
-
-/* Example custom button style (replace or remove as needed) */
+/* Example custom button style */
 .btn-custom {
   @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
+  @apply dark:bg-blue-600 dark:text-gray-200;
 }
 
-/* Example custom form input style (replace or remove as needed) */
+/* Example custom form input style */
 .input-custom {
   @apply border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md shadow-sm;
+  @apply dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring dark:focus:ring-blue-300 dark:focus:ring-opacity-50;
 }
 
 /* Custom styles for the messaging UI */
@@ -32,10 +29,12 @@
 
 .message-item-sent {
   @apply bg-blue-100 block clear-both mb-4 p-2 rounded-lg;
+  @apply dark:bg-blue-700;
 }
 
 .message-item-received {
   @apply bg-gray-200 block clear-both mb-4 p-2 rounded-lg;
+  @apply dark:bg-gray-500;
 }
 
 .chat-input-container {
@@ -44,10 +43,12 @@
 
 .chat-input {
   @apply border p-2 rounded w-full;
+  @apply dark:border-gray-600;
 }
 
 .chat-send-btn {
   @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2;
+  @apply dark:bg-blue-600 dark:hover:bg-blue-800 dark:text-gray-200;
 }
 
 /* Add more custom styles as needed */
@@ -55,31 +56,36 @@
 /* Tailwind CSS style for 'highlight' class */
 .highlight {
   @apply bg-yellow-500 text-white font-bold;
+  @apply dark:bg-yellow-600 dark:text-gray-200;
 }
 
 /* Style for visually distinguishing chat list items with unread messages */
 .unread-message {
   @apply bg-red-100 border-l-4 border-red-500;
+  @apply dark:bg-red-700 dark:border-red-900;
 }
 
 /* Custom style for post titles */
 .post-title {
   @apply text-2xl font-bold text-gray-800 mb-2;
+  @apply dark:text-white;
 }
 
 /* Custom style for SubSphere and post flairs */
 .flair {
   @apply inline-block bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-3 py-1 rounded-full;
+  @apply dark:bg-blue-800 dark:text-blue-200;
 }
 
 /* Custom style for post content margin */
 .post-content {
   @apply mt-2;
+  @apply dark:text-gray-200;
 }
 
 /* Theme specific styles */
 .light-theme {
-  @apply bg-gray-100;
+  @apply bg-gray-100 text-gray-900;
 }
 
 .dark-theme {
@@ -117,3 +123,41 @@
 .dark-theme .toggle-button:before {
   @apply transform translate-x-5;
 }
+
+/* Extending styles for light and dark themes */
+/* Background and text colors for main elements */
+.light-theme .bg-page {
+  @apply bg-gray-100;
+}
+
+.dark-theme .bg-page {
+  @apply bg-gray-800;
+}
+
+.light-theme .text-primary {
+  @apply text-gray-900;
+}
+
+.dark-theme .text-primary {
+  @apply text-white;
+}
+
+/* Button styles for light and dark themes */
+.light-theme .btn-primary {
+  @apply bg-blue-500 hover:bg-blue-700 text-white;
+}
+
+.dark-theme .btn-primary {
+  @apply bg-blue-600 hover:bg-blue-800 text-gray-200;
+}
+
+/* Input styles for light and dark themes */
+.light-theme .input-primary {
+  @apply border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50;
+}
+
+.dark-theme .input-primary {
+  @apply border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-50;
+}
+
+/* Additional customizations can be added below following the same pattern */

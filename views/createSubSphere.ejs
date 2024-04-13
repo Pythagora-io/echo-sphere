@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="<%= theme === 'dark' ? 'dark' : '' %>">
 <%- include('partials/_head.ejs') %>
-<body class="bg-gray-100">
+<body class="bg-gray-100 dark:bg-gray-800">
 <%- include('partials/_header.ejs') %>
 <main role="main" class="mt-10">
   <div class="max-w-4xl mx-auto px-4">
-    <h2 class="text-2xl font-bold mb-6">Create SubSphere</h2>
-    <form action="/createSubSphere" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-200">Create SubSphere</h2>
+    <form action="/createSubSphere" method="POST" class="bg-white dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <div class="mb-4">
-        <input type="text" name="name" placeholder="Name" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <input type="text" name="name" placeholder="Name" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline">
       </div>
       <div class="mb-4">
-        <textarea name="description" placeholder="Description" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+        <textarea name="description" placeholder="Description" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline"></textarea>
       </div>
       <div class="mb-4">
-        <input type="text" name="flairs" placeholder="Flairs (comma-separated)" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <input type="text" name="flairs" placeholder="Flairs (comma-separated)" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline">
       </div>
       <!-- Add more inputs for settings as needed -->
       <div class="flex items-center justify-between">
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create SubSphere</button>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline dark:bg-blue-600 dark:hover:bg-blue-800">Create SubSphere</button>
       </div>
     </form>
   </div>

@@ -1,37 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="<%= theme === 'dark' ? 'dark' : '' %>">
 <%- include('partials/_head.ejs') %>
-<body class="bg-gray-100">
+<body class="bg-gray-100 dark:bg-gray-800">
 <%- include('partials/_header.ejs') %>
 <main role="main" class="mt-10">
   <div class="max-w-4xl mx-auto px-4">
-    <h2 class="text-2xl font-bold mb-6">SubSpheres</h2>
+    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-200">SubSpheres</h2>
     <div class="mb-6">
-      <a href="/createSubSphere" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create SubSphere</a>
+      <a href="/createSubSphere" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded dark:bg-blue-600 dark:hover:bg-blue-800">Create SubSphere</a>
     </div>
     <section>
-      <h3 class="text-xl font-bold mb-4">Moderated SubSpheres</h3>
+      <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-gray-200">Moderated SubSpheres</h3>
       <% if (moderatedSubSpheres.length > 0) { %>
         <% moderatedSubSpheres.forEach(function(subSphere) { %>
-          <div class="flex justify-between items-center bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <a href="/subSphere/<%= subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700 font-bold"><%= subSphere.name %></a>
-            <a href="/editSubSphere/<%= subSphere._id %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</a>
+          <div class="flex justify-between items-center bg-white dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <a href="/subSphere/<%= subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-400 font-bold"><%= subSphere.name %></a>
+            <a href="/editSubSphere/<%= subSphere._id %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded dark:bg-blue-600 dark:hover:bg-blue-800">Edit</a>
           </div>
         <% }); %>
       <% } else { %>
-        <p class="text-gray-700">You are not moderating any SubSpheres yet. <a href="/createSubSphere" class="text-blue-500 hover:text-blue-700">Create one now!</a></p>
+        <p class="text-gray-600 dark:text-gray-400">You are not moderating any SubSpheres yet. <a href="/createSubSphere" class="text-blue-500 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-400">Create one now!</a></p>
       <% } %>
     </section>
     <section>
-      <h3 class="text-xl font-bold mb-4">Subscribed SubSpheres</h3>
+      <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-gray-200">Subscribed SubSpheres</h3>
       <% if (subscribedSubSpheres.length > 0) { %>
         <% subscribedSubSpheres.forEach(function(subSphere) { %>
-          <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <a href="/subSphere/<%= subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700"><%= subSphere.name %></a>
+          <div class="bg-white dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <a href="/subSphere/<%= subSphere._id %>/posts" class="text-blue-500 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-400"><%= subSphere.name %></a>
           </div>
         <% }); %>
       <% } else { %>
-        <p class="text-gray-700">You have not subscribed to any SubSpheres yet. Explore and <a href="/subSpheresList" class="text-blue-500 hover:text-blue-700">join SubSpheres</a> to see their posts.</p>
+        <p class="text-gray-600 dark:text-gray-400">You have not subscribed to any SubSpheres yet. Explore and <a href="/subSpheresList" class="text-blue-500 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-400">join SubSpheres</a> to see their posts.</p>
       <% } %>
     </section>
   </div>

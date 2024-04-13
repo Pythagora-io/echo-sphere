@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="<%= theme === 'dark' ? 'dark' : '' %>">
 <head>
   <meta charset="UTF-8">
   <title>Error Page</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 dark:bg-gray-800">
   <div class="min-h-screen flex items-center justify-center">
-    <div class="max-w-md w-full bg-white shadow-md rounded-lg p-6">
-      <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Oops! Something went wrong.</h2>
-      <p class="text-gray-600 text-center mb-6">We're sorry for the inconvenience. Please try again later.</p>
-      <p class="text-red-500 text-center font-semibold">Error: <%= message %></p>
+    <div class="max-w-md w-full bg-white dark:bg-gray-700 shadow-md rounded-lg p-6">
+      <h2 class="text-2xl font-bold text-center text-gray-800 dark:text-gray-200 mb-4">Oops! Something went wrong.</h2>
+      <p class="text-gray-600 dark:text-gray-400 text-center mb-6">We're sorry for the inconvenience. Please try again later.</p>
+      <p class="text-red-500 dark:text-red-400 text-center font-semibold">Error: <%= message %></p>
       <div class="mt-6">
-        <a href="/" class="block text-center bg-blue-500 text-white font-semibold rounded-lg px-4 py-2 hover:bg-blue-600">Go to Homepage</a>
+        <a href="/" class="block text-center bg-blue-500 dark:bg-blue-600 text-white font-semibold rounded-lg px-4 py-2 hover:bg-blue-600 dark:hover:bg-blue-700">Go to Homepage</a>
       </div>
     </div>
   </div>
