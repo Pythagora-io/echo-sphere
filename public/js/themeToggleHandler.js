@@ -1,28 +1,41 @@
 document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('themeToggle');
-    const themeLabel = document.querySelector('.theme-label');
 
-    themeToggle.addEventListener('change', function() {
-        const theme = themeToggle.checked ? 'dark' : 'light';
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
 
         fetch('/api/theme', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ theme: theme })
+            body: JSON.stringify({ theme: newTheme })
         })
         .then(response => {
-            if (response.ok) {
-                console.log(`Theme changed to: ${theme}`);
-                if (theme === 'dark') {
-                    document.documentElement.className = '';
-                    document.documentElement.classList.add('dark-theme');
-                    themeLabel.textContent = 'Dark Mode';
-                } else {
-                    document.documentElement.className = '';
-                    document.documentElement.classList.add('light-theme');
-                    themeLabel.textContent = 'Light Mode';
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.message === 'Theme updated successfully.') {
+                console.log(`Theme changed to: ${newTheme}`);
+                document.documentElement.className = '';
+                document.documentElement.classList.add(newTheme);
+                // Update the theme toggle label based on the new theme
+                const themeLabel = document.querySelector('.theme-label');
+                if (themeLabel) {
+                    themeLabel.textContent = newTheme === 'dark' ? 'Dark Mode' : 'Light Mode';
+                }
+                // Display a message to the user about the theme update
+                const themeMessage = document.getElementById('themeMessage');
+                if (themeMessage) {
+                    themeMessage.textContent = 'Theme updated successfully.';
+                    themeMessage.style.display = 'block';
+                    setTimeout(() => {
+                        themeMessage.style.display = 'none';
+                    }, 5000);
                 }
             } else {
                 throw new Error('Failed to change theme');
@@ -30,17 +43,14 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             console.error('Error changing theme:', error.message, error.stack);
-            displayErrorMessage('Failed to change theme. Please try again.');
+            const themeMessage = document.getElementById('themeMessage');
+            if (themeMessage) {
+                themeMessage.textContent = 'Failed to change theme. Please try again.';
+                themeMessage.style.display = 'block';
+                setTimeout(() => {
+                    themeMessage.style.display = 'none';
+                }, 5000);
+            }
         });
     });
-
-    function displayErrorMessage(message) {
-        const errorMessageContainer = document.createElement('div');
-        errorMessageContainer.setAttribute('class', 'error-message');
-        errorMessageContainer.textContent = message;
-        document.body.insertBefore(errorMessageContainer, document.body.firstChild);
-        setTimeout(() => {
-            errorMessageContainer.remove();
-        }, 5000);
-    }
 });

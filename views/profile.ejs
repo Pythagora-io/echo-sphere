@@ -29,20 +29,10 @@
       </form>
       <div class="theme-settings mt-8">
         <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-gray-200">Theme Settings</h3>
-        <div class="flex items-center justify-center">
-          <span class="mr-3 text-gray-700 dark:text-gray-300 font-medium">Light Mode</span>
-          <label for="themeToggle" class="inline-flex items-center cursor-pointer">
-            <span class="relative">
-              <span class="block w-10 h-6 bg-gray-400 dark:bg-gray-700 rounded-full shadow-inner"></span>
-              <span class="dot absolute left-1 top-1 bg-white dark:bg-gray-300 w-4 h-4 rounded-full transition"></span>
-            </span>
-            <input id="themeToggle" type="checkbox" class="hidden" <%= session.theme === 'dark' ? 'checked' : '' %>>
-            <span class="ml-3 text-gray-700 dark:text-gray-300 font-medium">Dark Mode</span>
-          </label>
-        </div>
+        <button id="themeToggle" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline dark:bg-blue-600 dark:hover:bg-blue-800">Change Theme</button>
       </div>
     </main>
-    <script src="/js/themeToggleHandler.js"></script>
   </body>
 <%- include('partials/_footer.ejs') %>
+<script src="/js/themeToggleHandler.js"></script>
 </html>

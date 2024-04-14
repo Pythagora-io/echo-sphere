@@ -67,4 +67,18 @@ router.post('/profile', isAuthenticated, upload.single('avatar'), async (req, re
   }
 });
 
+router.post('/profile/change-theme', isAuthenticated, async (req, res) => {
+  try {
+    const currentTheme = req.session.theme;
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    req.session.theme = newTheme;
+    await req.session.save();
+    console.log(`Theme changed successfully to: ${newTheme}`);
+    res.redirect('/profile');
+  } catch (error) {
+    console.error(`Error changing theme: ${error.message}`, error.stack);
+    res.status(500).send('Error changing theme');
+  }
+});
+
 module.exports = router;
