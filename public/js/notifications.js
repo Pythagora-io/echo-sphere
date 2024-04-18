@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const chatListItems = document.querySelectorAll('#chatList li');
       chatListItems.forEach(item => {
         if (item.textContent.includes(username)) {
-          item.classList.add('bg-blue-100', 'dark:bg-gray-600', 'text-white');
+          item.classList.add('bg-blue-200', 'dark:bg-blue-900', 'text-blue-800', 'dark:text-blue-200');
         }
       });
     }
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
       highlightUnreadMessages(matches[1]);
     }
     const messagesLink = document.querySelector('a[href="/messages"]');
-    messagesLink.classList.add('bg-green-100', 'dark:bg-green-800', 'dark:text-blue-300', 'text-white');
+    messagesLink.classList.add('bg-green-200', 'dark:bg-green-900', 'text-green-800', 'dark:text-green-200');
     messagesLink.dataset.messages = 'new';
   }
 
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('New notification received:', notification);
     if (notification.type === 'newComment') {
       const notificationsLink = document.querySelector('a[href="/notifications"]');
-      notificationsLink.classList.add('bg-green-100', 'dark:bg-green-800', 'dark:text-blue-300', 'text-white');
+      notificationsLink.classList.add('bg-green-200', 'dark:bg-green-900', 'text-green-800', 'dark:text-green-200');
       notificationsLink.dataset.notifications = 'new';
     } else if (notification.type === 'newMessage') {
       handleNewMessageNotification(notification);
@@ -55,10 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
           });
 
           if (hasUnreadMessages) {
-            messagesLink.classList.add('bg-green-100', 'dark:bg-green-800', 'dark:text-blue-300', 'text-white');
+            messagesLink.classList.add('bg-green-200', 'dark:bg-green-900', 'text-green-800', 'dark:text-green-200');
             messagesLink.dataset.messages = 'new';
           } else if (hasOtherUnreadNotifications) {
-            notificationsLink.classList.add('bg-green-100', 'dark:bg-green-800', 'dark:text-blue-300', 'text-white');
+            notificationsLink.classList.add('bg-green-200', 'dark:bg-green-900', 'text-green-800', 'dark:text-green-200');
             notificationsLink.dataset.notifications = 'new';
           }
         }

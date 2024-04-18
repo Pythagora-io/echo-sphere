@@ -72,8 +72,8 @@ document.addEventListener('DOMContentLoaded', function() {
           } else {
             data.logs.forEach(log => {
               const logItem = document.createElement('div');
-              logItem.classList.add('mb-2', 'p-2', 'bg-gray-100', 'dark:bg-gray-800', 'rounded', 'shadow');
-              logItem.innerHTML = `<div class="font-bold text-lg text-gray-900 dark:text-white">${new Date(log.timestamp).toLocaleString()}</div><div>Target: <span class="font-semibold text-gray-900 dark:text-white">${log.target}</span></div><div>Action: <span class="font-semibold text-gray-900 dark:text-white">${log.action}</span></div><div>Target ID: <span class="font-semibold text-gray-900 dark:text-white">${log.targetId}</span></div>`;
+              logItem.classList.add('mb-2', 'p-2', 'bg-gray-100', 'dark:bg-gray-800', 'rounded', 'shadow', 'dark:text-gray-300');
+              logItem.innerHTML = `<div class="font-bold text-lg text-gray-900 dark:text-gray-300">${new Date(log.timestamp).toLocaleString()}</div><div>Target: <span class="font-semibold text-gray-900 dark:text-gray-300">${log.target}</span></div><div>Action: <span class="font-semibold text-gray-900 dark:text-gray-300">${log.action}</span></div><div>Target ID: <span class="font-semibold text-gray-900 dark:text-gray-300">${log.targetId}</span></div>`;
               logsList.appendChild(logItem);
             });
           }

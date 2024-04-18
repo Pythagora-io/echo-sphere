@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" class="<%= theme === 'dark' ? 'dark' : '' %>">
 <%- include('../partials/_head.ejs') %>
-<body class="bg-gray-100 dark:bg-gray-800">
+<body class="bg-gray-100 dark:bg-gray-900">
 <%- include('../partials/_header.ejs') %>
 <main role="main" class="mt-10">
   <div class="max-w-4xl mx-auto px-4">
-    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-200">Create Post</h2>
+    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Create Post</h2>
     <% if (subSpheres && subSpheres.length > 0) { %>
-    <form action="/createPost" method="POST" class="bg-white dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4" enctype="multipart/form-data">
+    <form action="/createPost" method="POST" class="bg-white dark:bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4" enctype="multipart/form-data">
       <div class="mb-4">
         <label for="title" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Title</label>
-        <input type="text" name="title" placeholder="Title" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline">
+        <input type="text" name="title" placeholder="Title" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:placeholder-gray-400">
       </div>
       <div class="mb-4">
         <label for="type" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Post Type</label>
-        <select name="type" id="postType" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline">
+        <select name="type" id="postType" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:placeholder-gray-400">
           <!-- Options will be dynamically added based on the selected SubSphere's settings -->
         </select>
       </div>
@@ -23,22 +23,22 @@
       </div>
       <div class="mb-4">
         <label for="flairs" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Flairs (comma-separated)</label>
-        <input type="text" name="flairs" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline">
+        <input type="text" name="flairs" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:placeholder-gray-400">
       </div>
       <div class="mb-4">
         <label for="subSphere" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">SubSphere</label>
-        <select name="subSphere" id="subSphereSelect" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline" required>
+        <select name="subSphere" id="subSphereSelect" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:placeholder-gray-400" required>
           <% subSpheres.forEach(function(subSphere) { %>
             <option value="<%= subSphere._id %>"><%= subSphere.name %></option>
           <% }); %>
         </select>
       </div>
       <div class="flex items-center justify-between">
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Post</button>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Create Post</button>
       </div>
     </form>
     <% } else { %>
-      <p class="text-gray-900 dark:text-gray-200">Please explore and join a SubSphere before creating a post.</p>
+      <p class="text-gray-900 dark:text-white">Please explore and join a SubSphere before creating a post.</p>
     <% } %>
   </div>
 </main>

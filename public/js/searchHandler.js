@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="bg-white dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
                   <p class="text-blue-500 hover:text-blue-700 font-bold dark:hover:text-blue-400">${post.content}</p>
                   <p class="text-sm text-gray-500 dark:text-gray-400">By ${post.author.username} on ${new Date(post.createdAt).toLocaleString()}</p>
-                  <p>Total Votes: ${post.upvotes - post.downvotes}</p>
+                  <p class="text-gray-900 dark:text-gray-200">Total Votes: ${post.upvotes - post.downvotes}</p>
                 </div>
               `;
               mainPanel.appendChild(postElement);
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
               subSphereElement.innerHTML = `
                 <div class="bg-white dark:bg-gray-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
                   <p class="text-blue-500 hover:text-blue-700 font-bold dark:hover:text-blue-400">${subSphere.name}: ${subSphere.description}</p>
-                  <p>Subscribers: ${subSphere.subscribers ? subSphere.subscribers.length : 'N/A'}</p>
+                  <p class="text-gray-900 dark:text-gray-200">Subscribers: ${subSphere.subscribers ? subSphere.subscribers.length : 'N/A'}</p>
                 </div>
               `;
               mainPanel.appendChild(subSphereElement);

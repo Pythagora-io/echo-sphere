@@ -16,11 +16,11 @@
           <% if (user.avatar) { %>
             <img src="<%= user.avatar %>" alt="Your Avatar" class="w-40 h-40 object-cover rounded-full">
           <% } %>
-          <input type="file" name="avatar" class="form-input mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm">
+          <input type="file" name="avatar" class="form-input mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-md shadow-sm">
         </div>
         <div class="mb-4">
           <label for="bio" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Bio</label>
-          <textarea name="bio" placeholder="Tell us about yourself" required class="form-textarea mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm"><%= user.bio %></textarea>
+          <textarea name="bio" placeholder="Tell us about yourself" required class="form-textarea mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-md shadow-sm"><%= user.bio %></textarea>
         </div>
         <!-- Add more fields for settings as needed -->
         <div class="mb-4">
